@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.ion.nradon.restlet.data.NamedValue;
+
 
 public class Series<T extends NamedValue<String>> extends WrapperList<T> {
 

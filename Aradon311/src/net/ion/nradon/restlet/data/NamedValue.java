@@ -1,4 +1,4 @@
-package net.ion.nradon.restlet;
+package net.ion.nradon.restlet.data;
 
 public interface NamedValue<V> {
 

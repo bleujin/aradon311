@@ -4,16 +4,18 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+import net.ion.nradon.restlet.data.CharacterSet;
+import net.ion.nradon.restlet.data.Parameter;
+import net.ion.nradon.restlet.representation.Representation;
 import net.ion.radon.core.TreeContext;
 
 public class FormReader {
-	private volatile Charset characterSet;
+	private volatile CharacterSet characterSet;
 
 	/** Indicates if the parameters should be decoded. */
 	private volatile boolean decode;
@@ -24,11 +26,25 @@ public class FormReader {
 	/** The form stream. */
 	private volatile InputStream stream;
 
-	public FormReader(String parametersString, Charset characterSet, char separator) {
+	public FormReader(String parametersString, CharacterSet characterSet, char separator) {
 		this(parametersString, characterSet, separator, true);
 	}
 
-	public FormReader(String parametersString, Charset characterSet, char separator, boolean decode) {
+	public FormReader(Representation representation) throws IOException {
+		this(representation, true);
+	}
+
+	public FormReader(Representation representation, boolean decode) throws IOException {
+		this.decode = decode;
+		stream = representation.getStream();
+		separator = '&';
+		if (representation.getCharacterSet() != null)
+			characterSet = representation.getCharacterSet();
+		else
+			characterSet = CharacterSet.UTF_8;
+	}
+
+	public FormReader(String parametersString, CharacterSet characterSet, char separator, boolean decode) {
 		this.decode = decode;
 		this.stream = new ByteArrayInputStream(parametersString.getBytes());
 		this.characterSet = characterSet;

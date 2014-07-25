@@ -1,7 +1,9 @@
-package net.ion.nradon.restlet;
+package net.ion.nradon.restlet.data;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+
+import net.ion.nradon.restlet.Reference;
+import net.ion.nradon.restlet.SysUtils;
 
 public class Parameter implements Comparable<Parameter>, NamedValue<String> {
 
@@ -33,7 +35,7 @@ public class Parameter implements Comparable<Parameter>, NamedValue<String> {
 	}
 
 
-	public void encode(Appendable buffer, Charset characterSet) throws IOException {
+	public void encode(Appendable buffer, CharacterSet characterSet) throws IOException {
 		if (getName() != null) {
 			buffer.append(Reference.encode(getName(), characterSet));
 
@@ -44,7 +46,7 @@ public class Parameter implements Comparable<Parameter>, NamedValue<String> {
 		}
 	}
 
-	public String encode(Charset characterSet) throws IOException {
+	public String encode(CharacterSet characterSet) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		encode(sb, characterSet);
 		return sb.toString();

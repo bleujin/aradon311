@@ -5,6 +5,8 @@ import java.util.Map;
 // Referenced classes of package org.restlet.data:
 //            Metadata, Parameter, Form
 
+import net.ion.nradon.restlet.data.Parameter;
+
 public final class MediaType extends Metadata {
 
 	/**

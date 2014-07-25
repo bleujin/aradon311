@@ -1,10 +1,10 @@
 package net.ion.nradon.restlet;
 
-import java.nio.charset.Charset;
+import net.ion.nradon.restlet.data.CharacterSet;
 
 public class SysUtils {
 
-	public static Charset UTF8_CHARSET = Charset.forName("UTF-8");
+	public static CharacterSet UTF8_CHARSET = CharacterSet.UTF_8 ;
 
 	public static int hashCode(Object... objects) {
 		int result = 17;

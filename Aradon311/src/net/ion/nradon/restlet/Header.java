@@ -1,5 +1,7 @@
 package net.ion.nradon.restlet;
 
+import net.ion.nradon.restlet.data.NamedValue;
+
 public class Header implements NamedValue<String> {
 
 	private volatile String name;

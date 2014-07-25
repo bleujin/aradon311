@@ -6,26 +6,27 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
+import net.ion.nradon.restlet.data.CharacterSet;
+import net.ion.nradon.restlet.data.Parameter;
 import net.ion.radon.core.TreeContext;
 
 public class Reference {
 
-	private static Charset UTF8_CHARSET = Charset.forName("UTF-8") ;
+	private static CharacterSet UTF8_CHARSET = CharacterSet.UTF_8 ;
 	
 	public static String decode(String toDecode) {
 		return decode(toDecode, UTF8_CHARSET);
 	}
 
-	public static String decode(String toDecode, Charset characterSet) {
+	public static String decode(String toDecode, CharacterSet characterSet) {
 		String result = null;
 		try {
-			result = characterSet != null ? URLDecoder.decode(toDecode, characterSet.name()) : toDecode;
+			result = characterSet != null ? URLDecoder.decode(toDecode, characterSet.getName()) : toDecode;
 		} catch (UnsupportedEncodingException uee) {
 			TreeContext.getCurrentLogger().log(Level.WARNING, "Unable to decode the string with the UTF-8 character set.", uee);
 		}
@@ -40,10 +41,10 @@ public class Reference {
 		return encode(toEncode, queryString, UTF8_CHARSET);
 	}
 
-	public static String encode(String toEncode, boolean queryString, Charset characterSet) {
+	public static String encode(String toEncode, boolean queryString, CharacterSet characterSet) {
 		String result = null;
 		try {
-			result = characterSet != null ? URLEncoder.encode(toEncode, characterSet.name()) : toEncode;
+			result = characterSet != null ? URLEncoder.encode(toEncode, characterSet.getName()) : toEncode;
 		} catch (UnsupportedEncodingException uee) {
 			TreeContext.getCurrentLogger().log(Level.WARNING, "Unable to encode the string with the UTF-8 character set.", uee);
 		}
@@ -52,7 +53,7 @@ public class Reference {
 		return result;
 	}
 
-	public static String encode(String toEncode, Charset characterSet) {
+	public static String encode(String toEncode, CharacterSet characterSet) {
 		return encode(toEncode, true, characterSet);
 	}
 
@@ -460,7 +461,7 @@ public class Reference {
 		return new Form(getMatrix(), ';');
 	}
 
-	public Form getMatrixAsForm(Charset characterSet) {
+	public Form getMatrixAsForm(CharacterSet characterSet) {
 		return new Form(getMatrix(), characterSet, ';');
 	}
 
@@ -535,7 +536,7 @@ public class Reference {
 		return new Form(getQuery(), decode);
 	}
 
-	public Form getQueryAsForm(Charset characterSet) {
+	public Form getQueryAsForm(CharacterSet characterSet) {
 		return new Form(getQuery(), characterSet);
 	}
 

@@ -1,8 +1,11 @@
 package net.ion.nradon.restlet;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.List;
+
+import net.ion.nradon.restlet.data.CharacterSet;
+import net.ion.nradon.restlet.data.Parameter;
+import net.ion.nradon.restlet.representation.Representation;
 
 /**
  * Form which is a specialized modifiable list of parameters.
@@ -18,6 +21,15 @@ public class Form extends Series<Parameter> {
 
 	public Form(int initialCapacity) {
 		super(Parameter.class, initialCapacity);
+	}
+
+	public Form(Representation webForm) {
+		this(webForm, true);
+	}
+
+	public Form(Representation webForm, boolean decode) {
+		this();
+		FormUtils.parse(this, webForm, decode);
 	}
 
 	public Form(List<Parameter> delegate) {
@@ -40,19 +52,19 @@ public class Form extends Series<Parameter> {
 		this(parametersString, SysUtils.UTF8_CHARSET, separator, decode);
 	}
 
-	public Form(String queryString, Charset characterSet) {
+	public Form(String queryString, CharacterSet characterSet) {
 		this(queryString, characterSet, true);
 	}
 
-	public Form(String queryString, Charset characterSet, boolean decode) {
+	public Form(String queryString, CharacterSet characterSet, boolean decode) {
 		this(queryString, characterSet, '&', decode);
 	}
 
-	public Form(String parametersString, Charset characterSet, char separator) {
+	public Form(String parametersString, CharacterSet characterSet, char separator) {
 		this(parametersString, characterSet, separator, true);
 	}
 
-	public Form(String parametersString, Charset characterSet, char separator, boolean decode) {
+	public Form(String parametersString, CharacterSet characterSet, char separator, boolean decode) {
 		this();
 		FormUtils.parse(this, parametersString, characterSet, decode, separator);
 	}
@@ -66,12 +78,11 @@ public class Form extends Series<Parameter> {
 		return encode(SysUtils.UTF8_CHARSET);
 	}
 
-
-	public String encode(Charset characterSet) throws IOException {
+	public String encode(CharacterSet characterSet) throws IOException {
 		return encode(characterSet, '&');
 	}
 
-	public String encode(Charset characterSet, char separator) throws IOException {
+	public String encode(CharacterSet characterSet, char separator) throws IOException {
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < size(); i++) {
@@ -89,7 +100,7 @@ public class Form extends Series<Parameter> {
 		return getMatrixString(SysUtils.UTF8_CHARSET);
 	}
 
-	public String getMatrixString(Charset characterSet) {
+	public String getMatrixString(CharacterSet characterSet) {
 		try {
 			return encode(characterSet, ';');
 		} catch (IOException ioe) {
@@ -101,13 +112,12 @@ public class Form extends Series<Parameter> {
 		return getQueryString(SysUtils.UTF8_CHARSET);
 	}
 
-	public String getQueryString(Charset characterSet) {
+	public String getQueryString(CharacterSet characterSet) {
 		try {
 			return encode(characterSet);
 		} catch (IOException ioe) {
 			return null;
 		}
 	}
-
 
 }

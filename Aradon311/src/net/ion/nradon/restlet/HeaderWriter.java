@@ -1,8 +1,10 @@
 package net.ion.nradon.restlet;
 
 import java.io.StringWriter;
-import java.nio.charset.Charset;
 import java.util.Collection;
+
+import net.ion.nradon.restlet.data.CharacterSet;
+import net.ion.nradon.restlet.data.NamedValue;
 
 public abstract class HeaderWriter<V> extends StringWriter {
 
@@ -259,7 +261,7 @@ public abstract class HeaderWriter<V> extends StringWriter {
 	 *            The supported character encoding.
 	 * @return This writer.
 	 */
-	public HeaderWriter<V> appendUriEncoded(CharSequence source, Charset characterSet) {
+	public HeaderWriter<V> appendUriEncoded(CharSequence source, CharacterSet characterSet) {
 		return append(Reference.encode(source.toString(), characterSet));
 	}
 
