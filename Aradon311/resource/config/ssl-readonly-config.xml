@@ -1,0 +1,93 @@
+<?xml version="1.0"  encoding="UTF-8"?>
+
+<root>
+
+	<section name="">
+		<path name="default">
+			<urls>/</urls>
+			<description>Default</description>
+			<handler class="net.ion.radon.impl.let.HelloWorldLet" scope="request" />
+		</path>
+		
+		<path name="hello">
+			<urls>/hello, /hello2</urls>
+			<description>Default</description>
+			<handler class="net.ion.bleujin.HelloWorldLet2" scope="request" />
+			<afterfilter class="net.ion.radon.impl.filter.SayHello">
+			</afterfilter>
+		</path>
+		
+		<path name="favicon.ico">
+			<context>
+				<attribute id="base.dir">./resource/favicon.ico</attribute>
+			</context>
+			<urls>/favicon.ico</urls>
+			<handler class="net.ion.radon.impl.let.DirLet" scope="request" />
+		</path>
+	</section>
+	
+	<section name="another">
+		<prefilter class="net.ion.radon.impl.filter.SayHello" />
+		<path name="another_default">
+			<urls>/</urls>
+			<description>another default</description>
+			<handler class="net.ion.radon.impl.let.HelloWorldLet" />
+		</path>
+		
+		<path name="hello">
+			<urls>/hello, /hello/{greeting}</urls>
+			<description>Default</description>
+			<handler class="net.ion.radon.impl.let.HelloWorldLet" scope="request" />
+		</path>
+		
+		<path name="ghello">
+			<urls>/ghello, /ghello/{greeting}</urls>
+			<description>Default</description>
+			<handler class="net.ion.radon.impl.let.HelloWorldLet" scope="request" />
+			
+			<afterfilter lang="groovy" script-source="script-test/groovy/ScriptFilter.groovy">
+			</afterfilter>
+		</path>
+		
+		
+		<context>
+			<attribute id="let.contact.email">bleujin@i-on.net</attribute>
+		</context>
+	</section>
+
+	<!--  notification name="noti" host="61.250.201.78" port="9050">
+		<context>
+			<attribute id="socket.base.dir">./resource/socket/</attribute>
+		</context>
+		<path name="chat">
+			<urls>/chat.html</urls>
+			<handler class="net.ion.radon.socketio.examples.chat.ChatSocketServlet"/>
+		</path>
+	</notification -->
+	
+	
+	<prefilter class="net.ion.radon.impl.filter.SayHello">
+	</prefilter>
+
+	<afterfilter class="net.ion.radon.impl.filter.SayHello">
+	</afterfilter>
+
+	<plugin includepath="plugin/;lib/;">
+		
+	</plugin>
+	
+	<context>
+		<attribute id="let.contact.email">bleujin@i-on.net</attribute>
+		<attribute id="let.contact.help.doc">/help/doc</attribute>
+	</context>
+		
+	<server-config id="jupiter" >
+		<log-config-file>./resource/config/log4j.properties</log-config-file>
+		<connector-config  protocol="https" port="8888">
+			<parameter name="keystorePath" description="SSL keystore path" >./resource/keystore/webbit.keystore</parameter> 
+			<parameter name="keystorePassword" description="SSL keystore password" >webbit</parameter> 
+			<parameter name="keyPassword" description="SSL key password">webbit</parameter> 
+		</connector-config>
+		<manage-port auto-start="true">4567</manage-port>
+	</server-config>
+</root>

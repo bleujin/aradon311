@@ -1,0 +1,60 @@
+<?xml version="1.0"  encoding="UTF-8"?>
+
+<root>
+
+	<!--  test only file -->
+
+	<section name="async">
+		<path name="hello">
+			<urls>/hello</urls>
+			<description> async</description>
+			<handler class="net.ion.radon.impl.let.HelloWorldLet" />
+		</path>
+
+		<path name="broadcast">
+			<context>
+				<attribute id="path.attribute">name : broadcast</attribute>
+			</context>
+			<urls>/broadcast/{roomid}/{userid}</urls>
+			<description>sample</description>
+			<handler class="net.ion.nradon.let.SampleWebSocket" />
+		</path>
+		
+		<path name="esource">
+			<context>
+				<attribute id="path.attribute">name : esource</attribute>
+			</context>
+			<urls>/event/{roomid}</urls>
+			<description>sample</description>
+			<handler class="net.ion.nradon.let.SampleEventSource" />
+		</path>
+	</section>
+	
+	
+	<section name="resource">
+		<context>
+			<attribute id="base.dir">./resource/</attribute>
+		</context>
+		<filter class="net.ion.nradon.filter.SayHelloFilter" />
+		<path name="file">
+			<context>
+				<attribute id="path.attribute">name : file</attribute>
+			</context>
+			<urls matchMode="STARTWITH">/</urls>
+			<description />
+			<handler class="net.ion.nradon.let.SampleHttpResource" scope="application" />
+			<filter class="net.ion.nradon.filter.SayHelloFilter" />
+			<prefilter class="net.ion.radon.impl.filter.SayHello" />
+			<afterfilter class="net.ion.radon.impl.filter.SayHello" />
+		</path>
+	</section>
+	
+	
+	<filter class="net.ion.nradon.filter.SayHelloFilter" />
+	<server-config id="jupiter">
+		<log-config-file>./resource/config/log4j.properties</log-config-file>
+		<connector-config port="9999" />
+	</server-config>
+
+	
+</root>

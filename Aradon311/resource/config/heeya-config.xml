@@ -1,0 +1,24 @@
+<?xml version="1.0"  encoding="UTF-8"?>
+
+<root>
+
+	<section name="dev">
+		<path name="hello">
+			<urls>hello</urls>
+			<description>Default</description>
+			<handler class="net.ion.radon.impl.let.HelloWorldLet" scope="request" />
+		</path>
+	</section>
+	
+	<section name="test">
+		<context>
+			<attribute id="message">Context Message</attribute>
+		</context>
+	
+		<path name="hello">
+			<urls>/hello</urls>
+			<description>Default</description>
+			<handler class="net.ion.radon.impl.let.HelloWorldLet" scope="request" />
+		</path>
+	</section>
+</root>

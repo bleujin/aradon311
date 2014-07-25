@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="builder_for_aradon" default="publish">
+
+	<property name="baseDir" value="." />
+	<property name="binDir" value="./bin" />
+	<property name="sbinDir" value="./sbin" />
+	<property name="publishDir" value="./publish" />
+	
+	<tstamp>
+	  <format property="TODAY_MY" pattern="MM/dd/yyyy hh:mm"/>
+	</tstamp>
+
+	<target name="test_aradon">
+		<path id="test.classpath">
+			<pathelement location="aradon_lib/aradon/imsi/junit4_5.jar" />
+			<pathelement location="bin" />
+			<fileset dir="aradon_lib/aradon/embed">
+			    <include name="*.jar"/>
+		  </fileset>
+		</path>
+
+		<mkdir dir="report/html" />
+		<junit printsummary="on" haltonfailure="on" fork="true">
+			<classpath refid="test.classpath" />
+			<formatter type="xml" />
+			<test name="net.ion.radon.TestAllAradon" todir="resource/report"/>
+		</junit>
+	</target>
+	
+	<property name="manifest.main.class" value="net.ion.radon.ServerRunner" />
+	<property name="manifest.classpath" value="lib/ant.fat lib/jci_fat.jar lib/iframework_2.3.jar lib/apache_extend_fat.jar lib/servlet-api.jar" />
+	<property name="version.number" value="0" />
+	<property name="build.number" value="9" />
+	
+
+	<target name="publish">
+		<delete file="publish/aradon311_${version.number}.${build.number}.jar"></delete>
+		<jar destfile="publish/aradon311_${version.number}.${build.number}.jar">
+			<manifest>
+			  <attribute name="Built-By" value="${user.name}"/>
+			  <attribute name="Created-By" value="${user.name}"/>
+			  <attribute name="Main-Class" value="${manifest.main.class}" />
+			  <attribute name="Built-Date" value="${TODAY_MY}" />
+			  <attribute name="Class-Path" value="${manifest.classpath}" />
+			  <section name="common">
+			    <attribute name="Specification-Title" value="i-on aradon311 platform"/>
+			    <attribute name="Specification-Version" value="${version.number}.${build.number}"/>
+			    <attribute name="Specification-Vendor" value="i-on"/>
+			  </section>
+			</manifest>
+			<fileset dir="${binDir}/" includes="net/**" />
+			<fileset dir="${binDir}/" includes="org/**" />
+			<fileset dir="${binDir}/" includes="META-INF/**" />
+			<fileset dir="${sbinDir}/" includes="net/**" />
+			<fileset dir="${sbinDir}/" includes="org/**" />
+		</jar>
+	</target>
+</project>
