@@ -9,66 +9,42 @@
 package net.ion.radon;
 ...
 
-public class TestFirst {
-	
-	private Aradon aradon ;
-	@Before
-	public void setUp() throws Exception {
-		this.aradon = AradonTester.create().mergeSection("sname").addLet("/hello/, /hello/{name}", "hello", HelloLet.class).getAradon() ;
+@Path("/hello")
+public class TestRestFirst extends TestCase {
+ 
+	@GET
+	@Path("/{name}")
+	@Produces("text/plain")
+	public String hello(@PathParam("name") String name, @Context HttpRequest request, @Context HttpResponse response, @Context HttpHeaders headers){
+		Debug.line(request, response, headers);
+		return "hello " +  name;
 	}
 	
-	@After
-	public void tearDown() {
-		aradon.stop() ;
-	}
-	
-	@Test
-	public void hello() throws Exception {
-		AradonClient ac = AradonClientFactory.create(aradon) ;
-		Response response = ac.createRequest("/sname/hello/bleujin").handle(Method.GET) ;
-		Assert.assertEquals(200, response.getStatus().getCode()) ;
-		Assert.assertEquals("Hello bleujin", response.getEntity().getText()) ;
-	}
-	
-	@Test
-	public void http() throws Exception {
-		aradon.startServer(9000) ;
+	public void testHello() throws Exception {
+		Radon radon = RadonConfiguration.newBuilder(9000).add(new PathHandler(TestRestFirst.class)).start().get() ;
 		
-		AradonClient ac = AradonClientFactory.create("http://localhost:9000") ;
-		Response response = ac.createRequest("/sname/hello/bleujin").handle(Method.GET) ;
-		Assert.assertEquals(200, response.getStatus().getCode()) ;
-		Assert.assertEquals("Hello bleujin", response.getEntity().getText()) ;
+//		new InfinityThread().startNJoin(); 
+		sayHello("/hello/bleujin");
+		
+		
+		sayHello("/hi/bleujin"); 
+		radon.stop().get() ;
 	}
 
-	
-	@Test
-	public void post() throws Exception {
-		AradonClient ac = AradonClientFactory.create(aradon) ;
-		Response response = ac.createRequest("/sname/hello/").addParameter("p1", "bleujin") .handle(Method.POST) ;
-		Assert.assertEquals(200, response.getStatus().getCode()) ;
-		Assert.assertEquals("Hi bleujin", response.getEntity().getText()) ;
+
+	private void sayHello(String path) throws IOException, UnknownHostException, UnsupportedEncodingException {
+		Socket client = new Socket(InetAddress.getLocalHost(), 9000) ;
+		OutputStream output = client.getOutputStream() ;
+		output.write(("GET " + path + " HTTP/1.0\r\n" + "host: www.radon.com\r\n\r\n").getBytes("UTF-8"));
+		output.flush(); 
+		
+		InputStream input = client.getInputStream() ;
+		String result = IOUtil.toStringWithClose(input) ;
+		
+		Debug.line(result);
+		client.close();
 	}
-	
 	
 }
-
-class HelloLet extends AbstractServerResource{
-	
-	@Get
-	public String hello(){
-		return "Hello " + getInnerRequest().getAttribute("name") ; 
-	}
-
-	@Post
-	public String postHello(){
-		return "Hi " + getInnerRequest().getParameter("p1") ; 
-	}
-
-}
-
 	
 </code></pre>
-
-
-Project DOC : https://github.com/bleujin/aradon/blob/master/resource/docs/
-Html Pt : http://htmlpreview.github.com/?https://github.com/bleujin/aradon/master/resource/docs/html/index.htm#/2
