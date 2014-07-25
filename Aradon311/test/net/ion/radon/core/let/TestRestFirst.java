@@ -1,4 +1,4 @@
-package net.ion.nradon.rest;
+package net.ion.radon.core.let;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,37 +9,42 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.UriInfo;
 
 import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.IOUtil;
 import net.ion.nradon.Radon;
 import net.ion.nradon.config.RadonConfiguration;
+import net.ion.radon.core.let.PathHandler;
 
 import org.jboss.resteasy.spi.HttpRequest;
+import org.jboss.resteasy.spi.HttpResponse;
 
-public class TestGroup extends TestCase {
-	
-	
+
+@Path("/hello")
+public class TestRestFirst extends TestCase {
+ 
+	@GET
+	@Path("/{name}")
+	@Produces("text/plain")
+	public String hello(@PathParam("name") String name, @Context HttpRequest request, @Context HttpResponse response, @Context HttpHeaders headers){
+		Debug.line(request, response, headers);
+		return "hello " +  name;
+	}
 	
 	public void testHello() throws Exception {
-		Radon radon = RadonConfiguration.newBuilder(9000).add(new Rest311Handler()).start().get() ;
+		Radon radon = RadonConfiguration.newBuilder(9000).add(new PathHandler(TestRestFirst.class)).start().get() ;
 		
-//		new InfinityThread().startNJoin();
+//		new InfinityThread().startNJoin(); 
+		sayHello("/hello/bleujin");
 		
-		sayHello("/namaste/bleujin");
-		sayHello("/hi/bleujin");
-		sayHello("/apps/namaste/bleujin");
-//		sayHello("/gombangwa/bleujin?name=bleujin"); 
-//		sayHello("/notfound"); 
-
-		Thread.sleep(100);
+		
+		sayHello("/hi/bleujin"); 
 		radon.stop().get() ;
 	}
 
@@ -47,7 +52,7 @@ public class TestGroup extends TestCase {
 	private void sayHello(String path) throws IOException, UnknownHostException, UnsupportedEncodingException {
 		Socket client = new Socket(InetAddress.getLocalHost(), 9000) ;
 		OutputStream output = client.getOutputStream() ;
-		output.write(("GET " + path + " HTTP/1.0\r\n" + "host: www.radon.com\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\n\r\n").getBytes("UTF-8"));
+		output.write(("GET " + path + " HTTP/1.0\r\n" + "host: www.radon.com\r\n\r\n").getBytes("UTF-8"));
 		output.flush(); 
 		
 		InputStream input = client.getInputStream() ;
@@ -58,22 +63,3 @@ public class TestGroup extends TestCase {
 	}
 	
 }
-
-
-
-
-@Path("/gombangwa")
-class Gombangwa {
-	
-	public Gombangwa(){}
-	
-	
-	@GET
-	@Path("{name}")
-	public String hi(@PathParam("name") String name, @HeaderParam(HttpHeaders.HOST) String host, @Context HttpRequest request){
-		UriInfo uinfo = request.getUri();
-		Debug.line(uinfo.getPath(), request.getFormParameters());
-		return "Gombangwa " + name + " by " + host;
-	}
-}
-

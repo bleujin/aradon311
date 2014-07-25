@@ -28,7 +28,7 @@ public class TestSectionHandler extends TestCase {
 
 	public void testFirst() throws Exception {
 		
-		Radon radon = RadonConfiguration.newBuilder(9000).add("/bleujin/*", new SectionHandler(new AsterikLet(), new ViewFileLet())).startRadon() ;
+		Radon radon = RadonConfiguration.newBuilder(9000).add("/bleujin/*", new PathHandler(AsterikLet.class, ViewFileLet.class)).startRadon() ;
 //		printGet("/bleujin/hi/rulala/d"); 
 		printGet("/bleujin/resource/ptest.prop");
 		radon.stop().get() ;

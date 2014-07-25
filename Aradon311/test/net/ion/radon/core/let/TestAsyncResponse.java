@@ -1,4 +1,4 @@
-package net.ion.nradon.rest;
+package net.ion.radon.core.let;
 
 import java.io.OutputStreamWriter;
 
@@ -9,6 +9,7 @@ import net.ion.framework.util.Debug;
 import net.ion.framework.util.InfinityThread;
 import net.ion.nradon.Radon;
 import net.ion.nradon.config.RadonConfiguration;
+import net.ion.radon.core.let.PathHandler;
 
 import org.jboss.resteasy.spi.HttpResponse;
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class TestAsyncResponse {
 
 	@Test
 	public void run() throws Exception {
-		Radon radon = RadonConfiguration.newBuilder(9000).add(new Rest311Handler(new TestAsyncResponse())).start().get() ;
+		Radon radon = RadonConfiguration.newBuilder(9000).add(new PathHandler(TestAsyncResponse.class)).start().get() ;
 		
 		
 		new InfinityThread().startNJoin(); 

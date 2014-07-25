@@ -1,4 +1,4 @@
-package net.ion.nradon.rest;
+package net.ion.radon.core.let;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -10,6 +10,7 @@ import javax.ws.rs.core.Context;
 
 import net.ion.framework.util.Debug;
 import net.ion.nradon.stub.StubHttpResponse;
+import net.ion.radon.core.let.PathHandler;
 
 import org.jboss.resteasy.spi.HttpResponse;
 import org.junit.Test;
@@ -53,7 +54,7 @@ public class TestOutputLet extends TestBaseRest{
 	
 	@Test
 	public void outputLet() throws Exception{
-    	handler = new Rest311Handler(new TestOutputLet()); 
+    	handler = new PathHandler(TestOutputLet.class); 
     	StubHttpResponse response = handle(request("/output").method("GET")) ;
     	
     	Debug.line(response.contentsString()) ;

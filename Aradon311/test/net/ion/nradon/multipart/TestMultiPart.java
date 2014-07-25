@@ -21,7 +21,7 @@ import net.ion.radon.aclient.RequestBuilder;
 import net.ion.radon.aclient.Response;
 import net.ion.radon.aclient.multipart.FilePart;
 import net.ion.radon.aclient.multipart.StringPart;
-import net.ion.radon.core.let.SectionHandler;
+import net.ion.radon.core.let.PathHandler;
 
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
@@ -33,7 +33,7 @@ public class TestMultiPart extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		this.radon = RadonConfiguration.newBuilder(9000).add(new SectionHandler(new UploadFileService())).startRadon();
+		this.radon = RadonConfiguration.newBuilder(9000).add(new PathHandler(UploadFileService.class)).startRadon();
 	}
 	
 	@Override

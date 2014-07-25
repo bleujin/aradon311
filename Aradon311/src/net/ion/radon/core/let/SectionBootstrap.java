@@ -19,11 +19,11 @@ public class SectionBootstrap extends ConfigurationBootstrap {
 	};
 	private final URL[] scanningUrls;
 
-	public SectionBootstrap(URL[] scanningUrls, Object... resources) {
+	public SectionBootstrap(URL[] scanningUrls, Class... resources) {
 		this.scanningUrls = scanningUrls;
 		Set<String> clzNames = SetUtil.newSet() ;
-		for (Object res : resources) {
-			clzNames.add(res.getClass().getCanonicalName()) ;
+		for (Class res : resources) {
+			clzNames.add(res.getCanonicalName()) ;
 		}
 		PARAMS.put("resteasy.resources", StringUtil.join(clzNames, ",")) ;
 	}

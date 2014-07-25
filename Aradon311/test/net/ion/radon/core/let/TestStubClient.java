@@ -30,7 +30,7 @@ public class TestStubClient extends TestCase{
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		this.sclient = StubClient.create(new HelloLet()) ;
+		this.sclient = StubClient.create(HelloLet.class) ;
 	}
 	
 	public void testUseStupClient() throws Exception {
@@ -48,7 +48,7 @@ public class TestStubClient extends TestCase{
 
 	
 	public void testContext() throws Exception {
-		Radon radon = RadonConfiguration.newBuilder(9000).add(new SectionHandler(new HelloLet())).startRadon() ;
+		Radon radon = RadonConfiguration.newBuilder(9000).add(new PathHandler(HelloLet.class)).startRadon() ;
 		radon.getConfig().getServiceContext().putAttribute("Greeting", "Hello") ;
 	
 		Response response = NewClient.create().preparePut("http://localhost:9000/hello/bleujin").execute().get() ;

@@ -1,4 +1,4 @@
-package net.ion.nradon.rest.let;
+package net.ion.radon.core.let;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

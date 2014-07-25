@@ -1,17 +1,17 @@
 package net.ion.radon.client;
 
 import net.ion.nradon.stub.StubHttpRequest;
-import net.ion.radon.core.let.SectionHandler;
+import net.ion.radon.core.let.PathHandler;
 
 public class StubClient {
 
-	private SectionHandler shandler;
+	private PathHandler shandler;
 	StubClient() {
 	}
 	
-	public static StubClient create(Object... lets) {
+	public static StubClient create(Class... clazz) {
 		StubClient result = new StubClient();
-		result.shandler = new SectionHandler(lets)  ; 
+		result.shandler = new PathHandler(clazz)  ; 
 		return result ;
 	}
 

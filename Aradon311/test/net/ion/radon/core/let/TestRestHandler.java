@@ -1,4 +1,4 @@
-package net.ion.nradon.rest;
+package net.ion.radon.core.let;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -12,6 +12,7 @@ import net.ion.nradon.HttpHandler;
 import net.ion.nradon.stub.StubHttpControl;
 import net.ion.nradon.stub.StubHttpRequest;
 import net.ion.nradon.stub.StubHttpResponse;
+import net.ion.radon.core.let.PathHandler;
 
 import org.junit.Test;
 public class TestRestHandler {
@@ -20,7 +21,7 @@ public class TestRestHandler {
 
     @Test
     public void respondWithExplicitlyResources() throws Exception {
-        handler = new Rest311Handler(new HelloResource());
+        handler = new PathHandler(HelloResource.class);
         StubHttpResponse response = handle(request("/hello/world").method("GET"));
         assertReturnedWithStatus(200, response);
         assertEquals("Hello world", response.contentsString());
@@ -28,7 +29,7 @@ public class TestRestHandler {
 
     @Test
     public void respondsWithClz() throws Exception {
-        handler = new Rest311Handler(HelloResource.class);
+        handler = new PathHandler(HelloResource.class);
         StubHttpResponse response = handle(request("/hello/bleujin").method("GET"));
         assertReturnedWithStatus(200, response);
         assertEquals("Hello bleujin", response.contentsString());
@@ -36,15 +37,15 @@ public class TestRestHandler {
 
     @Test
     public void respondsWithNotAllowedPostMethod() throws Exception {
-        handler = new Rest311Handler(getClass());
-        StubHttpResponse response = handle(request("/hello").method("POST"));
+        handler = new PathHandler(HelloResource.class);
+        StubHttpResponse response = handle(request("/hello/hero").method("POST"));
         assertEquals("", response.contentsString());
         assertReturnedWithStatus(405, response);
     }
 
     @Test
     public void respondsWith404() throws Exception {
-        handler = new Rest311Handler(getClass());
+        handler = new PathHandler(HelloResource.class);
         StubHttpResponse response = handle(request("/nuffink").method("GET"));
         assertEquals("", response.contentsString());
         assertReturnedWithStatus(404, response);
@@ -67,16 +68,17 @@ public class TestRestHandler {
     }
 
     
-    @Path("/hello")
-    public static class HelloResource {
-        @GET
-        @Path("{name}")
-        public String hello(@PathParam("name") final String name) {
-            return "Hello " + name;
-        }
-    }
 }
 
+
+@Path("/hello")
+class HelloResource {
+    @GET
+    @Path("{name}")
+    public String hello(@PathParam("name") final String name) {
+        return "Hello " + name;
+    }
+}
 
 
 

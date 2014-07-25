@@ -1,4 +1,4 @@
-package net.ion.nradon.rest;
+package net.ion.radon.core.let;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,6 +6,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
 import net.ion.nradon.stub.StubHttpResponse;
+import net.ion.radon.core.let.PathHandler;
 
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class TestRestHello extends TestBaseRest{
 
     @Test
     public void helloGet() throws Exception {
-    	handler = new Rest311Handler(new TestRestHello()); 
+    	handler = new PathHandler(TestRestHello.class); 
 
     	StubHttpResponse response = handle(request("/hello").method("GET")) ;
     	assertEquals("Hello", response.contentsString());

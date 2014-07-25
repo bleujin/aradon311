@@ -1,4 +1,4 @@
-package net.ion.nradon.rest;
+package net.ion.radon.core.let;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import net.ion.framework.util.Debug;
-import net.ion.nradon.rest.let.HiLet;
-import net.ion.nradon.rest.let.NamasteLet;
 
 import org.jboss.resteasy.plugins.server.servlet.ConfigurationBootstrap;
 
