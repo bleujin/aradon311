@@ -9,6 +9,7 @@ import net.ion.nradon.HttpRequest;
 import net.ion.nradon.HttpResponse;
 import net.ion.nradon.Radon;
 import net.ion.nradon.handler.event.ServerEvent.EventType;
+import net.ion.radon.core.RadonInjectorFactory;
 
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.plugins.server.servlet.ConfigurationBootstrap;
@@ -29,6 +30,7 @@ public class PathHandler implements HttpHandler {
 	private void init(URL[] scanningUrls, Class... resources) {
 		ConfigurationBootstrap bootstrap = new SectionBootstrap(scanningUrls, resources);
 		ResteasyDeployment deployment = bootstrap.createDeployment();
+		deployment.setInjectorFactoryClass(RadonInjectorFactory.class.getCanonicalName());
 //		deployment.getResources().addAll(Arrays.asList(resources));
 		deployment.start();
 		dispatcher = deployment.getDispatcher();

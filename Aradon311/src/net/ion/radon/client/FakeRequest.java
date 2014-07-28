@@ -5,6 +5,7 @@ import net.ion.nradon.HttpHandler;
 import net.ion.nradon.stub.StubHttpControl;
 import net.ion.nradon.stub.StubHttpRequest;
 import net.ion.nradon.stub.StubHttpResponse;
+import net.ion.radon.core.TreeContext;
 
 import org.jboss.netty.handler.codec.http.HttpMethod;
 
@@ -54,6 +55,8 @@ public class FakeRequest {
 	}
 	
 	public StubHttpResponse handle(HttpMethod method) throws Exception {
+		TreeContext treeContext = (TreeContext) request.data(TreeContext.class.getCanonicalName()) ;
+		treeContext.getParentContext() ;
 		request.method(method) ;
 		
 		StubHttpResponse response = new StubHttpResponse();

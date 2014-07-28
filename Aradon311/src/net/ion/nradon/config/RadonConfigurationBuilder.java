@@ -54,7 +54,7 @@ public class RadonConfigurationBuilder {
 	private int maxHeaderSize = 8192;
 	private int maxChunkSize = 8192;
 	private int maxContentLength = 1024 * 1024 * 20; // 20M
-	private TreeContext rootContext = null;
+	private TreeContext rootContext = TreeContext.createRootContext() ;
 	
     private SSLContext sslContext;
     
@@ -66,18 +66,18 @@ public class RadonConfigurationBuilder {
 	}
 
 	public RadonConfiguration build() {
-		if (this.rootContext == null) this.rootContext = TreeContext.createRootContext();
 		if (this.publicUri == null) this.publicUri = localUri(this.protocol, this.portNum) ;
 		if (this.executor == null) this.executor = Executors.newSingleThreadScheduledExecutor() ;
 		if (this.exceptionHandler == null) this.exceptionHandler = new PrintStackTraceExceptionHandler() ;
 		if (this.ioExceptionHandler == null) this.ioExceptionHandler = new SilentExceptionHandler() ;
 		if (this.socketAddress == null) this.socketAddress = new InetSocketAddress(publicUri.getPort()) ;
+		System.setProperty("log4j.configuration", "file:./resource/log4j.properties") ;
 		
 		return new RadonConfiguration(this.rootContext, this.publicUri, this.executor, this.exceptionHandler, this.ioExceptionHandler, this.socketAddress, this.handlers, this.sslContext, 
 				this.staleConnectionTimeout, this.maxInitialLineLength, this.maxHeaderSize, this.maxChunkSize, this.maxContentLength) ;
 	}
 	
-	
+
 	protected void setupDefaultHandlers() {
 		handlers.add(new ServerHeaderHandler("Aradon"));
 		handlers.add(new DateHeaderHandler());
@@ -214,8 +214,8 @@ public class RadonConfigurationBuilder {
 		return this;
 	}
 
-	public RadonConfigurationBuilder rootContext(TreeContext rootContext) {
-		this.rootContext = rootContext ;
+	public RadonConfigurationBuilder rootContext(String key, Object value) {
+		rootContext.putAttribute(key, value) ;
 		return this ;
 	}
 

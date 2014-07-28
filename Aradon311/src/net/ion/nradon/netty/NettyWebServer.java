@@ -22,6 +22,7 @@ import javax.net.ssl.SSLEngine;
 import net.ion.framework.util.ListUtil;
 import net.ion.nradon.HttpHandler;
 import net.ion.nradon.Radon;
+import net.ion.nradon.config.OnEventObject;
 import net.ion.nradon.config.RadonConfiguration;
 import net.ion.nradon.handler.ServerHeaderHandler;
 import net.ion.nradon.handler.event.ServerEvent.EventType;
@@ -89,6 +90,8 @@ public class NettyWebServer extends Radon {
 	}
 
 	public synchronized Future<Radon> start() {
+		
+		
 		FutureTask<Radon> future = new FutureTask<Radon>(new Callable<Radon>() {
 
 			public Radon call() throws Exception {
@@ -148,7 +151,9 @@ public class NettyWebServer extends Radon {
 				bootstrap.setFactory(new NioServerSocketChannelFactory(bossExecutor, workerExecutor, 1));
 				channel = bootstrap.bind(getConfig().socketAddress());
 
+				fireContext(EventType.START) ;
 				fireEvent(EventType.START);
+				
 				return NettyWebServer.this;
 			}
 		});
@@ -157,6 +162,14 @@ public class NettyWebServer extends Radon {
 		return future;
 	}
 
+	private void fireContext(EventType etype) {
+		for(String key : rootContext.keys()){
+			OnEventObject eobj = rootContext.getAttributeObject(key, OnEventObject.class) ;
+			if (eobj != null){
+				eobj.onEvent(etype, this);
+			}
+		}
+	}
 	public void fireEvent(EventType eventType) {
 		List<HttpHandler> handlers = getConfig().handlers() ;
 		
@@ -178,6 +191,7 @@ public class NettyWebServer extends Radon {
 	public synchronized Future<Radon> stop() {
 
 		fireEvent(EventType.STOP);
+		fireContext(EventType.STOP) ;
 
 		FutureTask<Radon> future = new FutureTask<Radon>(new Callable<Radon>() {
 			public Radon call() throws Exception {

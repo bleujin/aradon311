@@ -15,7 +15,7 @@ import junit.framework.TestCase;
 import net.ion.nradon.Radon;
 import net.ion.nradon.config.RadonConfiguration;
 
-public class TestSectionHandler extends TestCase {
+public class TestPathHandler extends TestCase {
 
 	public void testFirst() throws Exception {
 		

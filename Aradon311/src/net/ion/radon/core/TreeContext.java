@@ -3,6 +3,7 @@ package net.ion.radon.core;
 import java.io.Closeable;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import net.ion.framework.util.IOUtil;
@@ -27,7 +28,8 @@ public class TreeContext {
 	}
 
 	public final static TreeContext createRootContext() {
-		return new TreeContext(null);
+		TreeContext result = new TreeContext(null);
+		return result;
 	}
 
 	public TreeContext createChildContext() {
@@ -39,6 +41,10 @@ public class TreeContext {
 		return parent;
 	}
 
+	public Set<String> keys(){
+		return attrs.keySet() ; 
+	}
+	
 	public Object getAttributeObject(String key) {
 		return getAttributeObject(key, Object.class);
 	}

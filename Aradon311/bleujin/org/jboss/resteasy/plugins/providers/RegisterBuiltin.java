@@ -1,15 +1,16 @@
 package org.jboss.resteasy.plugins.providers;
 
-import org.jboss.resteasy.logging.Logger;
-import org.jboss.resteasy.spi.ResteasyProviderFactory;
-
-import javax.ws.rs.ext.Providers;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
+
+import javax.ws.rs.ext.Providers;
+
+import org.jboss.resteasy.logging.Logger;
+import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -43,7 +44,7 @@ public class RegisterBuiltin {
 				String line;
 				while ((line = reader.readLine()) != null) {
 					line = line.trim();
-					if (line.equals(""))
+					if (line.equals("") || line.startsWith("//"))
 						continue;
 					set.add(line);
 				}

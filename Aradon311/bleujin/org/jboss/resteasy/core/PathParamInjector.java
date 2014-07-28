@@ -1,19 +1,20 @@
 package org.jboss.resteasy.core;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.PathSegment;
+
 import org.jboss.resteasy.specimpl.UriInfoImpl;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.HttpResponse;
 import org.jboss.resteasy.spi.InternalServerErrorException;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.jboss.resteasy.util.Types;
-
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.PathSegment;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -53,8 +54,7 @@ public class PathParamInjector implements ValueInjector {
 	}
 
 	public Object inject(HttpRequest request, HttpResponse response) {
-		if (extractor == null) // we are a PathSegment
-		{
+		if (extractor == null) { // we are a PathSegment
 			UriInfoImpl uriInfo = (UriInfoImpl) request.getUri();
 			List<PathSegment[]> list = null;
 			if (encode) {

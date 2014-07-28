@@ -1,4 +1,4 @@
-package org.jboss.resteasy.core;
+package net.ion.radon.core;
 
 import static org.jboss.resteasy.util.FindAnnotation.findAnnotation;
 
@@ -23,6 +23,23 @@ import javax.ws.rs.core.Context;
 
 import org.jboss.resteasy.annotations.Form;
 import org.jboss.resteasy.annotations.Suspend;
+import org.jboss.resteasy.core.ConstructorInjectorImpl;
+import org.jboss.resteasy.core.ContextParameterInjector;
+import org.jboss.resteasy.core.CookieParamInjector;
+import org.jboss.resteasy.core.FormInjector;
+import org.jboss.resteasy.core.FormParamInjector;
+import org.jboss.resteasy.core.HeaderParamInjector;
+import org.jboss.resteasy.core.ListFormInjector;
+import org.jboss.resteasy.core.MapFormInjector;
+import org.jboss.resteasy.core.MatrixParamInjector;
+import org.jboss.resteasy.core.MessageBodyParameterInjector;
+import org.jboss.resteasy.core.MethodInjectorImpl;
+import org.jboss.resteasy.core.PathParamInjector;
+import org.jboss.resteasy.core.PrefixedFormInjector;
+import org.jboss.resteasy.core.PropertyInjectorImpl;
+import org.jboss.resteasy.core.QueryParamInjector;
+import org.jboss.resteasy.core.SuspendInjector;
+import org.jboss.resteasy.core.ValueInjector;
 import org.jboss.resteasy.spi.ConstructorInjector;
 import org.jboss.resteasy.spi.InjectorFactory;
 import org.jboss.resteasy.spi.MethodInjector;
@@ -30,15 +47,11 @@ import org.jboss.resteasy.spi.PropertyInjector;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.jboss.resteasy.util.Types;
 
-/**
- * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1 $
- */
 @SuppressWarnings("unchecked")
-public class InjectorFactoryImpl implements InjectorFactory {
+public class RadonInjectorFactory implements InjectorFactory {
 	private ResteasyProviderFactory providerFactory;
 
-	public InjectorFactoryImpl(ResteasyProviderFactory factory) {
+	public RadonInjectorFactory(ResteasyProviderFactory factory) {
 		this.providerFactory = factory;
 	}
 
@@ -73,6 +86,7 @@ public class InjectorFactoryImpl implements InjectorFactory {
 		CookieParam cookie;
 		FormParam formParam;
 		Suspend suspend;
+		ContextParam cparam ;
 
 		if ((query = findAnnotation(annotations, QueryParam.class)) != null) {
 			return new QueryParamInjector(type, genericType, injectTarget, query.value(), defaultVal, encode, annotations, providerFactory);
@@ -84,6 +98,8 @@ public class InjectorFactoryImpl implements InjectorFactory {
 			return new CookieParamInjector(type, genericType, injectTarget, cookie.value(), defaultVal, annotations, providerFactory);
 		} else if ((uriParam = findAnnotation(annotations, PathParam.class)) != null) {
 			return new PathParamInjector(type, genericType, injectTarget, uriParam.value(), defaultVal, encode, annotations, providerFactory);
+		} else if ((cparam = findAnnotation(annotations, ContextParam.class)) != null) {
+			return new ContextParamInjector(type, genericType, injectTarget, cparam.value(), defaultVal, encode, annotations, providerFactory);
 		} else if ((form = findAnnotation(annotations, Form.class)) != null) {
 			String prefix = form.prefix();
 			if (prefix.length() > 0) {

@@ -18,19 +18,19 @@ import net.ion.nradon.config.RadonConfiguration;
 import net.ion.nradon.stub.StubHttpResponse;
 import net.ion.radon.aclient.NewClient;
 import net.ion.radon.aclient.Response;
-import net.ion.radon.client.StubClient;
+import net.ion.radon.client.StubServer;
 import net.ion.radon.core.TreeContext;
 
 import org.jboss.resteasy.spi.HttpRequest;
 
 public class TestStubClient extends TestCase{
 
-	private StubClient sclient;
+	private StubServer sclient;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		this.sclient = StubClient.create(HelloLet.class) ;
+		this.sclient = StubServer.create(HelloLet.class) ;
 	}
 	
 	public void testUseStupClient() throws Exception {

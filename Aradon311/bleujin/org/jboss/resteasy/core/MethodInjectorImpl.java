@@ -150,7 +150,7 @@ public class MethodInjectorImpl implements MethodInjector {
 				WebApplicationException wae = (WebApplicationException) cause;
 				throw wae;
 			} else if (cause instanceof NullPointerException){
-				throw new WebApplicationException(404) ;
+				throw new ApplicationException(cause) ;
 			}
 			throw new ApplicationException(cause);
 		} catch (IllegalArgumentException e) {
