@@ -4,15 +4,15 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="sample"/>
 	<classpathentry kind="src" path="bleujin"/>
-	<classpathentry kind="lib" path="aradon_lib/aradon/embed/apache_extend_fat.jar"/>
-	<classpathentry kind="lib" path="aradon_lib/aradon/embed/iframework_2.3.jar"/>
-	<classpathentry kind="lib" path="aradon_lib/aradon/embed/netty-3.2.7.Final.jar"/>
-	<classpathentry kind="lib" path="aradon_lib/aradon/option/slf4j-api-1.7.6.jar"/>
-	<classpathentry kind="lib" path="aradon_lib/aradon/option/mockito-all-1.9.0-rc1.jar"/>
-	<classpathentry kind="lib" path="aradon_lib/aradon/option/servlet-api.jar"/>
-	<classpathentry kind="lib" path="aradon_lib/aradon/embed/jsr311_fat.jar"/>
-	<classpathentry kind="lib" path="aradon_lib/aradon/embed/aclient_0.5.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk6_45"/>
+	<classpathentry kind="lib" path="lib/ref/aclient_0.5.jar"/>
+	<classpathentry kind="lib" path="lib/ref/iframework_2.3.jar"/>
+	<classpathentry kind="lib" path="lib/reflib/apache_extend_fat.jar"/>
+	<classpathentry kind="lib" path="lib/reflib/jsr311_fat.jar"/>
+	<classpathentry kind="lib" path="lib/reflib/netty-3.2.7.Final.jar"/>
+	<classpathentry kind="lib" path="lib/option/servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/option/mockito-all-1.9.0-rc1.jar"/>
+	<classpathentry kind="lib" path="lib/option/slf4j-api-1.7.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
