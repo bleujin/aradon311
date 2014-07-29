@@ -51,8 +51,13 @@
 			<fileset dir="${binDir}/" includes="net/**" />
 			<fileset dir="${binDir}/" includes="org/**" />
 			<fileset dir="${binDir}/" includes="META-INF/**" />
-			<fileset dir="${sbinDir}/" includes="net/**" />
-			<fileset dir="${sbinDir}/" includes="org/**" />
 		</jar>
 	</target>
+	
+		<target name="copy" depends="publish">
+		<echo>Copy to NISS</echo>
+		<copy file="publish/aradon311_${version.number}.${build.number}.jar" todir="../../niss/NISS/lib/ref/" />
+	</target>
+	
+	
 </project>
