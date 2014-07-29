@@ -157,7 +157,7 @@ public class NettyWebServer extends Radon {
 				return NettyWebServer.this;
 			}
 		});
-		final Thread thread = new Thread(future, "WEBBIT-STARTUP-THREAD");
+		final Thread thread = new Thread(future, "RADON-STARTUP-THREAD");
 		thread.start();
 		return future;
 	}
@@ -216,7 +216,7 @@ public class NettyWebServer extends Radon {
 		});
 		// don't use Executor here - it's just another resource we need to manage -
         // thread creation on shutdown should be fine
-        final Thread thread = new Thread(future, "WEBBIT-SHUTDOW-THREAD");
+        final Thread thread = new Thread(future, "RADON-SHUTDOW-THREAD");
         thread.start();
         return future;
 	}
