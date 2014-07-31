@@ -84,4 +84,8 @@ public class RestResponse implements org.jboss.resteasy.spi.HttpResponse {
     public boolean wasHandled() {
         return wasHandled;
     }
+    
+    public String toString(){
+    	return response.status() + ":" + response.toString() ;
+    }
 }

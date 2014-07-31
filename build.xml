@@ -54,9 +54,16 @@
 		</jar>
 	</target>
 	
-		<target name="copy" depends="publish">
+	<target name="copy" depends="publish">
+		<echo>Copy to Craken</echo>
+		<copy file="publish/aradon311_${version.number}.${build.number}.jar" todir="../craken/lib/ref/" />
+		
+		<echo>Copy to AradonClient</echo>
+		<copy file="publish/aradon311_${version.number}.${build.number}.jar" todir="../aradonClient/lib/ref/" />
+
 		<echo>Copy to NISS</echo>
 		<copy file="publish/aradon311_${version.number}.${build.number}.jar" todir="../niss/lib/ref/" />
+						
 	</target>
 	
 	

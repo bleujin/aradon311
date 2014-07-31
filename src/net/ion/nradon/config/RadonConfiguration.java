@@ -56,6 +56,7 @@ public class RadonConfiguration {
 	}
 	
 	public final static RadonConfigurationBuilder newBuilder(int portNum){
+		
 		return new RadonConfigurationBuilder().port(portNum) ;
 	}
 	

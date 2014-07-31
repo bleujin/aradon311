@@ -19,12 +19,12 @@ import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLEngine;
 
+import net.ion.framework.db.ThreadFactoryBuilder;
 import net.ion.framework.util.ListUtil;
 import net.ion.nradon.HttpHandler;
 import net.ion.nradon.Radon;
 import net.ion.nradon.config.OnEventObject;
 import net.ion.nradon.config.RadonConfiguration;
-import net.ion.nradon.handler.ServerHeaderHandler;
 import net.ion.nradon.handler.event.ServerEvent.EventType;
 import net.ion.nradon.handler.exceptions.PrintStackTraceExceptionHandler;
 import net.ion.nradon.handler.exceptions.SilentExceptionHandler;
@@ -80,7 +80,7 @@ public class NettyWebServer extends Radon {
 	}
 
 	protected void setupDefaultHandlers() {
-		add(new ServerHeaderHandler("Radon"));
+//		add(new ServerHeaderHandler("Radon"));
 //		add(new DateHeaderHandler());
 	}
 
@@ -144,9 +144,9 @@ public class NettyWebServer extends Radon {
 				executorServices.add(staleCheckExecutor);
 
 				connectionTrackingHandler = new ConnectionTrackingHandler();
-				ExecutorService bossExecutor = Executors.newSingleThreadExecutor();
+				ExecutorService bossExecutor = Executors.newSingleThreadExecutor(ThreadFactoryBuilder.createThreadFactory("boss-thread-%d"));
 				executorServices.add(bossExecutor);
-				ExecutorService workerExecutor = Executors.newSingleThreadExecutor();
+				ExecutorService workerExecutor = Executors.newCachedThreadPool(ThreadFactoryBuilder.createThreadFactory("worker-thread-%d")) ;
 				executorServices.add(workerExecutor);
 				bootstrap.setFactory(new NioServerSocketChannelFactory(bossExecutor, workerExecutor, 1));
 				channel = bootstrap.bind(getConfig().socketAddress());

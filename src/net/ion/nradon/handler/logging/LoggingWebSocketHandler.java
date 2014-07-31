@@ -22,7 +22,7 @@ class LoggingWebSocketHandler implements WebSocketHandler {
 
 	public void onClose(WebSocketConnection connection) throws Throwable {
 		logSink.webSocketConnectionClose(connection);
-		logSink.httpEnd(connection.httpRequest());
+//		logSink.httpEnd(connection.httpRequest());
 		handler.onClose(loggingConnection);
 	}
 

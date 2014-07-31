@@ -17,6 +17,7 @@ import java.util.concurrent.Future;
 
 import javax.net.ssl.SSLContext;
 
+import net.ion.framework.db.ThreadFactoryBuilder;
 import net.ion.framework.util.ListUtil;
 import net.ion.nradon.EventSourceHandler;
 import net.ion.nradon.HttpHandler;
@@ -66,12 +67,13 @@ public class RadonConfigurationBuilder {
 	}
 
 	public RadonConfiguration build() {
+		
 		if (this.publicUri == null) this.publicUri = localUri(this.protocol, this.portNum) ;
-		if (this.executor == null) this.executor = Executors.newSingleThreadScheduledExecutor() ;
+		if (this.executor == null) this.executor = Executors.newCachedThreadPool(ThreadFactoryBuilder.createThreadFactory("radon-thread-%d")) ;
 		if (this.exceptionHandler == null) this.exceptionHandler = new PrintStackTraceExceptionHandler() ;
 		if (this.ioExceptionHandler == null) this.ioExceptionHandler = new SilentExceptionHandler() ;
 		if (this.socketAddress == null) this.socketAddress = new InetSocketAddress(publicUri.getPort()) ;
-		System.setProperty("log4j.configuration", "file:./resource/log4j.properties") ;
+		
 		
 		return new RadonConfiguration(this.rootContext, this.publicUri, this.executor, this.exceptionHandler, this.ioExceptionHandler, this.socketAddress, this.handlers, this.sslContext, 
 				this.staleConnectionTimeout, this.maxInitialLineLength, this.maxHeaderSize, this.maxChunkSize, this.maxContentLength) ;
@@ -79,7 +81,8 @@ public class RadonConfigurationBuilder {
 	
 
 	protected void setupDefaultHandlers() {
-		handlers.add(new ServerHeaderHandler("Aradon"));
+		System.setProperty("log4j.configuration", "file:./resource/log4j.properties") ;		
+		handlers.add(new ServerHeaderHandler("Radon"));
 		handlers.add(new DateHeaderHandler());
 	}
 

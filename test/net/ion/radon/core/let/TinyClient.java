@@ -24,7 +24,11 @@ public class TinyClient {
 	public final static TinyClient local9000() throws UnknownHostException{
 		return new TinyClient(InetAddress.getLocalHost(), 9000) ;
 	}
-	
+
+	public final static TinyClient local(int port) throws UnknownHostException{
+		return new TinyClient(InetAddress.getLocalHost(), port) ;
+	}
+
 	public void sayHello(String path) throws IOException, UnknownHostException, UnsupportedEncodingException {
 		Socket client = new Socket(host, port) ;
 		OutputStream output = client.getOutputStream() ;

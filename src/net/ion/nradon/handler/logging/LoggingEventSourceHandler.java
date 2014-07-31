@@ -22,7 +22,7 @@ class LoggingEventSourceHandler implements EventSourceHandler {
 
 	public void onClose(EventSourceConnection connection) throws Exception {
 		logSink.eventSourceConnectionClose(connection);
-		logSink.httpEnd(connection.httpRequest());
+//		logSink.httpEnd(connection.httpRequest());
 		handler.onClose(loggingConnection);
 	}
 }

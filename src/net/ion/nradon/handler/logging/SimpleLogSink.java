@@ -10,6 +10,7 @@ import java.util.Date;
 import net.ion.framework.util.StringUtil;
 import net.ion.nradon.EventSourceConnection;
 import net.ion.nradon.HttpRequest;
+import net.ion.nradon.HttpResponse;
 import net.ion.nradon.WebSocketConnection;
 
 public class SimpleLogSink implements LogSink {
@@ -43,7 +44,7 @@ public class SimpleLogSink implements LogSink {
 		custom(request, "HTTP-START", null);
 	}
 
-	public void httpEnd(HttpRequest request) {
+	public void httpEnd(HttpRequest request, HttpResponse response) {
 		custom(request, "HTTP-END", null); // TODO: Time request
 	}
 

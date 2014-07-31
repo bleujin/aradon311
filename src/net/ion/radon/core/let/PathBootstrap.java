@@ -10,7 +10,7 @@ import net.ion.framework.util.StringUtil;
 
 import org.jboss.resteasy.plugins.server.servlet.ConfigurationBootstrap;
 
-public class SectionBootstrap extends ConfigurationBootstrap {
+public class PathBootstrap extends ConfigurationBootstrap {
 	private static final Map<String, String> PARAMS = new HashMap<String, String>() {
 		{
 			put("resteasy.scan", "false");
@@ -19,13 +19,14 @@ public class SectionBootstrap extends ConfigurationBootstrap {
 	};
 	private final URL[] scanningUrls;
 
-	public SectionBootstrap(URL[] scanningUrls, Class... resources) {
+	public PathBootstrap(URL[] scanningUrls, Class... resources) {
 		this.scanningUrls = scanningUrls;
 		Set<String> clzNames = SetUtil.newSet() ;
 		for (Class res : resources) {
 			clzNames.add(res.getCanonicalName()) ;
 		}
 		PARAMS.put("resteasy.resources", StringUtil.join(clzNames, ",")) ;
+		PARAMS.put("resteasy.servlet.mapping.prefix", "/bleujin") ;
 	}
 
 	@Override

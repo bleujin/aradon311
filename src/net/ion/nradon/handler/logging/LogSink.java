@@ -2,13 +2,14 @@ package net.ion.nradon.handler.logging;
 
 import net.ion.nradon.EventSourceConnection;
 import net.ion.nradon.HttpRequest;
+import net.ion.nradon.HttpResponse;
 import net.ion.nradon.WebSocketConnection;
 
 public interface LogSink {
 
 	void httpStart(HttpRequest request);
 
-	void httpEnd(HttpRequest request);
+	void httpEnd(HttpRequest request, HttpResponse response);
 
 	void webSocketConnectionOpen(WebSocketConnection connection);
 
