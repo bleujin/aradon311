@@ -23,7 +23,6 @@ import javax.ws.rs.core.Context;
 
 import org.jboss.resteasy.annotations.Form;
 import org.jboss.resteasy.annotations.Suspend;
-import org.jboss.resteasy.core.ConstructorInjectorImpl;
 import org.jboss.resteasy.core.ContextParameterInjector;
 import org.jboss.resteasy.core.CookieParamInjector;
 import org.jboss.resteasy.core.FormInjector;
@@ -56,7 +55,7 @@ public class RadonInjectorFactory implements InjectorFactory {
 	}
 
 	public ConstructorInjector createConstructor(Constructor constructor) {
-		return new ConstructorInjectorImpl(constructor, providerFactory);
+		return new RadonInjectorImpl(constructor, providerFactory);
 	}
 
 	public PropertyInjector createPropertyInjector(Class resourceClass) {
@@ -87,7 +86,7 @@ public class RadonInjectorFactory implements InjectorFactory {
 		FormParam formParam;
 		Suspend suspend;
 		ContextParam cparam ;
-
+		
 		if ((query = findAnnotation(annotations, QueryParam.class)) != null) {
 			return new QueryParamInjector(type, genericType, injectTarget, query.value(), defaultVal, encode, annotations, providerFactory);
 		} else if ((header = findAnnotation(annotations, HeaderParam.class)) != null) {

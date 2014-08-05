@@ -48,12 +48,12 @@ public class PathHandler implements HttpHandler {
 			dispatcher.invoke(req, res);
 			if (res.wasHandled()) {
 				response.status(200).end();
-				control.nextHandler(request, response, control);
+//				control.nextHandler(request, response, control);
 			} else {
-				control.nextHandler(); 
+//				control.nextHandler(); 
 			}
 		} else {
-			control.nextHandler(); 
+//			control.nextHandler(); 
 		}
 	}
 

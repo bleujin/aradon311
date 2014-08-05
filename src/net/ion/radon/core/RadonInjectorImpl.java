@@ -1,4 +1,4 @@
-package org.jboss.resteasy.core;
+package net.ion.radon.core;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 
 import javax.ws.rs.WebApplicationException;
 
+import org.jboss.resteasy.core.ValueInjector;
 import org.jboss.resteasy.spi.ApplicationException;
 import org.jboss.resteasy.spi.ConstructorInjector;
 import org.jboss.resteasy.spi.Failure;
@@ -15,15 +16,12 @@ import org.jboss.resteasy.spi.HttpResponse;
 import org.jboss.resteasy.spi.InternalServerErrorException;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
-/**
- * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1 $
- */
-public class ConstructorInjectorImpl implements ConstructorInjector {
+
+public class RadonInjectorImpl implements ConstructorInjector {
 	protected Constructor constructor;
 	protected ValueInjector[] params;
 
-	public ConstructorInjectorImpl(Constructor constructor, ResteasyProviderFactory factory) {
+	public RadonInjectorImpl(Constructor constructor, ResteasyProviderFactory factory) {
 		this.constructor = constructor;
 		params = new ValueInjector[constructor.getParameterTypes().length];
 		for (int i = 0; i < constructor.getParameterTypes().length; i++) {
@@ -66,8 +64,6 @@ public class ConstructorInjectorImpl implements ConstructorInjector {
 			throw new InternalServerErrorException("Failed processing arguments of " + constructor.toString(), e);
 		}
 		try {
-			constructor.getName() ;
-			
 			if (!constructor.isAccessible()) constructor.setAccessible(true);
 			return constructor.newInstance(args);
 		} catch (InstantiationException e) {

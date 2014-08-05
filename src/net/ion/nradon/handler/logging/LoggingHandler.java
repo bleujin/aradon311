@@ -71,4 +71,7 @@ public class LoggingHandler extends AbstractHttpHandler {
 		control.nextHandler(request, responseWrapper, controlWrapper);
 	}
 
+	public int order() {
+		return 0;
+	}
 }

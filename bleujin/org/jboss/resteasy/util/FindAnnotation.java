@@ -1,16 +1,19 @@
 package org.jboss.resteasy.util;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+
+import net.ion.radon.core.ContextParam;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -22,7 +25,7 @@ public final class FindAnnotation {
 	/**
     *
     */
-	private static final Class<? extends Annotation>[] JAXRS_ANNOTATIONS = (Class<? extends Annotation>[]) new Class[] { QueryParam.class, HeaderParam.class, CookieParam.class, PathParam.class, MatrixParam.class, Context.class };
+	private static final Class<? extends Annotation>[] JAXRS_ANNOTATIONS = (Class<? extends Annotation>[]) new Class[] {ContextParam.class,  QueryParam.class, HeaderParam.class, CookieParam.class, PathParam.class, MatrixParam.class, Context.class };
 
 	private static final Class[] findJaxRSAnnotations_TYPE = new Class[] {};
 

@@ -12,7 +12,7 @@ import net.ion.nradon.handler.authentication.BasicAuthenticationHandler;
 public class WhoAmIHttpHandler extends AbstractHttpHandler {
     public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control) throws Exception {
         response.header("Content-type", "text/html")
-            .content("You are: " + request.data(BasicAuthenticationHandler.USERNAME))
+            .content("Whomai : You are: " + request.data(BasicAuthenticationHandler.USERNAME))
             .end();
     }
 }
