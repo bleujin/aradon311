@@ -1,5 +1,8 @@
 package net.ion.radon.client;
 
+import java.io.Closeable;
+import java.io.IOException;
+
 import net.ion.nradon.stub.StubHttpRequest;
 import net.ion.radon.core.TreeContext;
 import net.ion.radon.core.let.PathHandler;
@@ -30,5 +33,12 @@ public class StubServer {
 	
 	public TreeContext treeContext() {
 		return rootContext ;
+	}
+
+	public void shutdown() throws IOException {
+		for(String key : rootContext.keys()) {
+			Object obj = rootContext.getAttributeObject(key) ;
+			if (obj instanceof Closeable) ((Closeable)obj).close(); 
+		}
 	}
 }

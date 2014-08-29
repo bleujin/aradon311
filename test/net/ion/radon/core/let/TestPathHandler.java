@@ -3,7 +3,10 @@ package net.ion.radon.core.let;
 import java.io.File;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -23,8 +26,10 @@ import net.ion.nradon.handler.SimpleStaticFileHandler;
 import net.ion.nradon.handler.event.ServerEvent.EventType;
 import net.ion.nradon.handler.logging.LoggingHandler;
 import net.ion.nradon.handler.logging.SimpleLogSink;
+import net.ion.nradon.stub.StubHttpResponse;
 import net.ion.radon.aclient.NewClient;
 import net.ion.radon.aclient.Response;
+import net.ion.radon.client.StubServer;
 
 import org.jboss.resteasy.spi.HttpRequest;
 
@@ -67,7 +72,32 @@ public class TestPathHandler extends TestCase {
 		
 		radon.stop().get() ;
 	}
+	
+	public void testRemainPath() throws Exception {
+		StubServer ss = StubServer.create(AsterikLet.class) ;
+		StubHttpResponse response = ss.request("/bleujin/greeting/hello/hi/3").get() ;
+		Debug.line(response.contentsString());
+	}
+	
+	
+	public void testDefault() throws Exception {
+		StubServer ss = StubServer.create(DefaultLet.class) ;
+		StubHttpResponse response = ss.request("/boost").postParam("boost", "").post() ;
+		
+		Debug.line(response.contentsString());
+	}
+	
 
+}
+
+@Path("/boost")
+class DefaultLet {
+	
+	@POST
+	@Path("")
+	public String dftFn(@DefaultValue("1.0") @FormParam("boost") String boost){
+		return boost ;
+	}
 }
 
 class DebugHandler implements HttpHandler {

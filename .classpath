@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/option/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/option/mockito-all-1.9.0-rc1.jar"/>
 	<classpathentry kind="lib" path="lib/option/slf4j-api-1.7.6.jar"/>
+	<classpathentry kind="lib" path="lib/reflib/crawl_jci.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

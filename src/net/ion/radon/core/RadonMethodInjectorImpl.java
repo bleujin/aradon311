@@ -1,4 +1,4 @@
-package org.jboss.resteasy.core;
+package net.ion.radon.core;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -11,6 +11,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.ContextResolver;
 
+import org.jboss.resteasy.core.ValueInjector;
 import org.jboss.resteasy.spi.ApplicationException;
 import org.jboss.resteasy.spi.BadRequestException;
 import org.jboss.resteasy.spi.Failure;
@@ -26,7 +27,7 @@ import org.jboss.resteasy.util.Types;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @version $Revision: 1 $
  */
-public class MethodInjectorImpl implements MethodInjector {
+public class RadonMethodInjectorImpl implements MethodInjector {
 	protected Method method;
 	protected Method invokedMethod;
 	protected Class rootClass;
@@ -34,7 +35,7 @@ public class MethodInjectorImpl implements MethodInjector {
 	protected ResteasyProviderFactory factory;
 	protected ValidatorAdapter validatorAdapter;
 
-	public MethodInjectorImpl(Class root, Method method, ResteasyProviderFactory factory) {
+	public RadonMethodInjectorImpl(Class root, Method method, ResteasyProviderFactory factory) {
 		this.method = method;
 		this.rootClass = root;
 
@@ -138,6 +139,8 @@ public class MethodInjectorImpl implements MethodInjector {
 			validatorAdapter.applyValidation(resource, invokedMethod, args);
 
 		try {
+			// @TODO
+			
 			if (! invokedMethod.isAccessible()) invokedMethod.setAccessible(true);
 			return invokedMethod.invoke(resource, args);
 		} catch (IllegalAccessException e) {

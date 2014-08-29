@@ -1,5 +1,6 @@
 package org.jboss.resteasy.util;
 
+
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @version $Revision: 1 $
@@ -16,7 +17,7 @@ public class StringToPrimitive {
 		if (value == null)
 			value = "0";
 		if (primitiveType.equals(int.class))
-			return Integer.valueOf(value);
+			return Integer.valueOf(value) ;
 		if (primitiveType.equals(long.class))
 			return Long.valueOf(value);
 		if (primitiveType.equals(double.class))

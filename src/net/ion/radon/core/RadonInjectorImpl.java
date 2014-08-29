@@ -17,9 +17,9 @@ import org.jboss.resteasy.spi.InternalServerErrorException;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 
-public class RadonInjectorImpl implements ConstructorInjector {
-	protected Constructor constructor;
-	protected ValueInjector[] params;
+public final class RadonInjectorImpl implements ConstructorInjector {
+	private Constructor constructor;
+	private ValueInjector[] params;
 
 	public RadonInjectorImpl(Constructor constructor, ResteasyProviderFactory factory) {
 		this.constructor = constructor;
@@ -30,6 +30,7 @@ public class RadonInjectorImpl implements ConstructorInjector {
 			Annotation[] annotations = constructor.getParameterAnnotations()[i];
 			params[i] = factory.getInjectorFactory().createParameterExtractor(constructor.getDeclaringClass(), constructor, type, genericType, annotations);
 		}
+		
 	}
 
 	public Object[] injectableArguments(HttpRequest input, HttpResponse response) {
@@ -57,6 +58,7 @@ public class RadonInjectorImpl implements ConstructorInjector {
 	}
 
 	public Object construct(HttpRequest request, HttpResponse httpResponse) throws Failure, ApplicationException, WebApplicationException {
+
 		Object[] args = null;
 		try {
 			args = injectableArguments(request, httpResponse);

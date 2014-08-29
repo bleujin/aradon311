@@ -2,6 +2,24 @@ package org.jboss.resteasy.core;
 
 import static org.jboss.resteasy.util.FindAnnotation.findAnnotation;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.jboss.resteasy.annotations.Suspend;
 import org.jboss.resteasy.core.interception.InterceptorRegistry;
 import org.jboss.resteasy.core.interception.InterceptorRegistryListener;
@@ -19,24 +37,6 @@ import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 import org.jboss.resteasy.util.HttpHeaderNames;
 import org.jboss.resteasy.util.Types;
 import org.jboss.resteasy.util.WeightedMediaType;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -189,7 +189,13 @@ public class ResourceMethod implements ResourceInvoker, InterceptorRegistryListe
 	}
 
 	public ServerResponse invoke(HttpRequest request, HttpResponse response) {
+		
+		
 		Object target = resource.createResource(request, response, injector);
+//@TODO
+//		PathBootstrap pb = (PathBootstrap) providerFactory.getContextDataMap().get(org.jboss.resteasy.spi.ResteasyConfiguration.class) ;
+//		Debug.line(providerFactory, target.getClass(), target.getClass().getClassLoader(), pb.classLoader());
+
 		return invoke(request, response, target);
 	}
 

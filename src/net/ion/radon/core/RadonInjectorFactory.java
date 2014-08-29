@@ -32,7 +32,6 @@ import org.jboss.resteasy.core.ListFormInjector;
 import org.jboss.resteasy.core.MapFormInjector;
 import org.jboss.resteasy.core.MatrixParamInjector;
 import org.jboss.resteasy.core.MessageBodyParameterInjector;
-import org.jboss.resteasy.core.MethodInjectorImpl;
 import org.jboss.resteasy.core.PathParamInjector;
 import org.jboss.resteasy.core.PrefixedFormInjector;
 import org.jboss.resteasy.core.PropertyInjectorImpl;
@@ -63,7 +62,7 @@ public class RadonInjectorFactory implements InjectorFactory {
 	}
 
 	public MethodInjector createMethodInjector(Class root, Method method) {
-		return new MethodInjectorImpl(root, method, providerFactory);
+		return new RadonMethodInjectorImpl(root, method, providerFactory);
 	}
 
 	public ValueInjector createParameterExtractor(Class injectTargetClass, AccessibleObject injectTarget, Class type, Type genericType, Annotation[] annotations) {

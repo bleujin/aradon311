@@ -20,26 +20,32 @@ public class PathHandler implements HttpHandler {
 
 	private Dispatcher dispatcher;
 	private String prefixURI = "";
-
+	private ClassLoader cloader = PathHandler.class.getClassLoader() ;
 	
 	public PathHandler(Class... resources) {
 		init(new URL[0], resources);
 	}
 
-	public PathHandler(URLClassLoader cl, Class... resources) {
+	public PathHandler(ClassLoader cloader, Class... resources) {
+		this.cloader = cloader ;
+		init(new URL[0], resources);
+	}
+
+	@Deprecated
+	PathHandler(URLClassLoader cl, Class... resources) {
 		init(cl != null ? cl.getURLs() : new URL[0], resources);
 	}
 
 	private void init(URL[] scanningUrls, Class... resources) {
-		ConfigurationBootstrap bootstrap = new PathBootstrap(scanningUrls, resources);
+		ConfigurationBootstrap bootstrap = new PathBootstrap(scanningUrls, this.cloader, resources);
 		ResteasyDeployment deployment = bootstrap.createDeployment();
 		deployment.setInjectorFactoryClass(RadonInjectorFactory.class.getCanonicalName());
 		// deployment.getResources().addAll(Arrays.asList(resources));
 		deployment.start();
 		dispatcher = deployment.getDispatcher();
-
 	}
 
+	
 	public void handleHttpRequest(final HttpRequest request, final HttpResponse response, final HttpControl control) throws Exception {
 
 		if (StringUtil.isBlank(prefixURI) || request.uri().startsWith(prefixURI)) {
@@ -69,4 +75,9 @@ public class PathHandler implements HttpHandler {
 		this.prefixURI = prefixURI.startsWith("/") ? prefixURI : "/" + prefixURI;
 		return this;
 	}
+	
+	public ClassLoader classLoader(){
+		return cloader ;
+	}
+	
 }

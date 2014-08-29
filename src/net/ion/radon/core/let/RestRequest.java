@@ -64,5 +64,9 @@ public class RestRequest extends HttpRequestImpl {
         InputStream in = body == null ? new ByteArrayInputStream(new byte[0]) : new ByteArrayInputStream(body.getBytes("UTF-8"));
         return new RestRequest(request, in, headers, request.method(), uriInfo);
     }
+    
+    public String toString(){
+    	return getClass().getCanonicalName() + "[" + inner.uri() + "]" ; 
+    }
 
 }

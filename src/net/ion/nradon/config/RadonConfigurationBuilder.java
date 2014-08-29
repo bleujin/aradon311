@@ -181,7 +181,9 @@ public class RadonConfigurationBuilder {
 	}
 
 	public NettyWebServer createRadon() {
-		return new NettyWebServer(build());
+		RadonConfiguration config = build();
+		config.getServiceContext().putAttribute(RadonConfiguration.class.getCanonicalName(), config) ;
+		return new NettyWebServer(config);
 	}
 
 	public Future<Radon> start() {
@@ -222,4 +224,8 @@ public class RadonConfigurationBuilder {
 		return this ;
 	}
 
+	public <T> T context(String key, T value) {
+		rootContext.putAttribute(key, value) ;
+		return value ;
+	}
 }

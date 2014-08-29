@@ -18,15 +18,16 @@ public class PathBootstrap extends ConfigurationBootstrap {
 		}
 	};
 	private final URL[] scanningUrls;
+	private final ClassLoader cloader;
 
-	public PathBootstrap(URL[] scanningUrls, Class... resources) {
+	public PathBootstrap(URL[] scanningUrls, ClassLoader cloader, Class... resources) {
 		this.scanningUrls = scanningUrls;
+		this.cloader = cloader ;
 		Set<String> clzNames = SetUtil.newSet() ;
 		for (Class res : resources) {
 			clzNames.add(res.getCanonicalName()) ;
 		}
 		PARAMS.put("resteasy.resources", StringUtil.join(clzNames, ",")) ;
-		PARAMS.put("resteasy.servlet.mapping.prefix", "/bleujin") ;
 	}
 
 	@Override
@@ -52,5 +53,9 @@ public class PathBootstrap extends ConfigurationBootstrap {
 	@Override
 	public Set<String> getInitParameterNames() {
 		return PARAMS.keySet();
+	}
+	
+	public ClassLoader classLoader(){
+		return cloader ;
 	}
 }

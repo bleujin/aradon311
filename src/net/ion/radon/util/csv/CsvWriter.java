@@ -58,6 +58,10 @@ public class CsvWriter {
         endBlock();
     }
 
+    public void flush() throws IOException{
+    	writer.flush(); 
+    }
+    
     public void close() throws IOException {
         this.writer.close();
     }
