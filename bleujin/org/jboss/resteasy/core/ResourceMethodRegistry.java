@@ -1,20 +1,25 @@
 package org.jboss.resteasy.core;
 
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Set;
+
+import javax.ws.rs.Path;
+
 import org.jboss.resteasy.core.registry.RootSegment;
 import org.jboss.resteasy.logging.Logger;
 import org.jboss.resteasy.plugins.server.resourcefactory.JndiResourceFactory;
 import org.jboss.resteasy.plugins.server.resourcefactory.POJOResourceFactory;
 import org.jboss.resteasy.plugins.server.resourcefactory.SingletonResource;
 import org.jboss.resteasy.specimpl.UriBuilderImpl;
-import org.jboss.resteasy.spi.*;
+import org.jboss.resteasy.spi.HttpRequest;
+import org.jboss.resteasy.spi.InjectorFactory;
+import org.jboss.resteasy.spi.Registry;
+import org.jboss.resteasy.spi.ResourceFactory;
+import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.jboss.resteasy.util.GetRestful;
 import org.jboss.resteasy.util.IsHttpMethod;
 import org.jboss.resteasy.util.Types;
-
-import javax.ws.rs.Path;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Registry of resources and methods/classes that can dispatch HTTP method requests
@@ -62,6 +67,7 @@ public class ResourceMethodRegistry implements Registry {
 	 */
 	public void addPerRequestResource(Class clazz) {
 		addResourceFactory(new POJOResourceFactory(clazz));
+//		addResourceFactory(new ReloadPOJOResourceFactory(clazz));
 	}
 
 	/**
@@ -81,7 +87,10 @@ public class ResourceMethodRegistry implements Registry {
 	 *            base URI path for any resources provided by the factory, in addition to rootPath
 	 */
 	public void addResourceFactory(ResourceFactory ref, String base) {
+		
 		Class<?> clazz = ref.getScannableClass();
+//		addResourceFactory(ref, base, clazz); 
+		
 		Class restful = GetRestful.getRootResourceClass(clazz);
 		if (restful == null) {
 			String msg = "Class is not a root resource.  It, or one of its interfaces must be annotated with @Path: " + clazz.getName() + " implements: ";
@@ -90,6 +99,7 @@ public class ResourceMethodRegistry implements Registry {
 			}
 			throw new RuntimeException(msg);
 		}
+		
 		addResourceFactory(ref, base, restful);
 	}
 

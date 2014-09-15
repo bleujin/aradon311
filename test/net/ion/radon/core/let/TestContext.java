@@ -21,10 +21,10 @@ public class TestContext extends TestCase{
 
 	public void testFindContext() throws Exception {
 		StubServer ss = StubServer.create(getClass());
-		ss.treeContext().putAttribute("Greeting", "Hello") ;
+		ss.treeContext().putAttribute("Greeting", "Hi") ;
 
 		StubHttpResponse response = ss.request("/context/bleujin").get() ;
-		assertEquals("Hello bleujin", response.contentsString());
+		assertEquals("Hi bleujin", response.contentsString());
 	}
 	
 	

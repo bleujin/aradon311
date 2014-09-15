@@ -4,11 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import junit.framework.TestCase;
@@ -25,6 +30,9 @@ import net.ion.radon.core.let.PathHandler;
 
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.jboss.resteasy.spi.HttpRequest;
 
 public class TestMultiPart extends TestCase {
 
@@ -35,24 +43,34 @@ public class TestMultiPart extends TestCase {
 		super.setUp();
 		this.radon = RadonConfiguration.newBuilder(9000).add(new PathHandler(UploadFileService.class)).startRadon();
 	}
-	
+
 	@Override
 	protected void tearDown() throws Exception {
-		radon.stop().get() ;
+		radon.stop().get();
 		super.tearDown();
 	}
-	
+
 	public void testUpload() throws Exception {
-		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9000/file/upload").setMethod(HttpMethod.POST);
-		builder.addBodyPart(new StringPart("name", "value", "UTF-8")).addBodyPart(new FilePart("myfile", new File("resource/ptest.prop")));
+		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9000/file/input").setMethod(HttpMethod.POST);
+		builder.addBodyPart(new StringPart("name", "value", "UTF-8")).addBodyPart(new FilePart("myfile", new File("resource/ptest.prop"), "image/jpeg", "UTF-8"));
 
 		NewClient client = NewClient.create();
-		Response response = client.prepareRequest(builder.build()).execute().get() ;
+		Response response = client.prepareRequest(builder.build()).execute().get();
 		Debug.line(response.getTextBody(), response.getStatus());
-//
-//		assertEquals("hello.txt", json.asString("myfile"));
-//		assertEquals("value", json.asString("name"));
+		//
+		// assertEquals("hello.txt", json.asString("myfile"));
+		// assertEquals("value", json.asString("name"));
 	}
+
+	public void testParse() throws Exception {
+		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9000/file/parse").setMethod(HttpMethod.POST);
+		builder.addBodyPart(new StringPart("name", "value", "UTF-8")).addBodyPart(new FilePart("myfile", new File("resource/ptest.prop"), "image/jpeg", "UTF-8"));
+
+		NewClient client = NewClient.create();
+		Response response = client.prepareRequest(builder.build()).execute().get();
+		Debug.line(response.getTextBody(), response.getStatus());
+	}
+
 }
 
 @Path("/file")
@@ -61,27 +79,56 @@ class UploadFileService {
 	@POST
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public String uploadFile(@MultipartForm FileUploadForm uform) throws IOException {
+	public String uploadFile(@MultipartForm FileUploadForm uform, @Context HttpRequest req) throws IOException {
 
 		Debug.line(uform.name, IOUtil.toString(uform.input));
-		
+
+		return "";
+	}
+
+	@POST
+	@Path("/input")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public String inputFile(@Context HttpRequest req, InputStream input) throws IOException {
+
+		HttpHeaders headers = req.getHttpHeaders();
+		for (String hname : headers.getRequestHeaders().keySet()) {
+			System.out.println(hname + ":" + headers.getRequestHeaders().getFirst(hname));
+		}
+		System.out.println();
+		System.out.print(IOUtil.toStringWithClose(input));
+		return "";
+	}
+
+	@POST
+	@Path("/parse")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public String parseEntity(@Context HttpRequest request, MultipartFormDataInput  input) throws IOException {
+// http://www.mkyong.com/webservices/jax-rs/file-upload-example-in-resteasy/
+		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+		for (Entry<String, List<InputPart>> entry : uploadForm.entrySet()) {
+			Debug.line(entry.getKey(), entry.getValue());
+			for (InputPart part : entry.getValue()) {
+				InputStream inputStream = part.getBody(InputStream.class,null);
+				Debug.debug(part.getMediaType(), IOUtil.toStringWithClose(inputStream)) ;
+			}
+		}
+
 		return "";
 	}
 
 }
 
-
 class FileUploadForm implements Serializable {
 	private static final long serialVersionUID = -2975137795423083295L;
 
 	public FileUploadForm() {
-		super() ;
+		super();
 	}
 
-
 	@FormParam("myfile")
-	InputStream input ;
-	
+	InputStream input;
+
 	@FormParam("name")
-	String name ;
+	String name;
 }

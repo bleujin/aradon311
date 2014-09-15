@@ -23,10 +23,7 @@ import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.jboss.resteasy.spi.validation.ValidatorAdapter;
 import org.jboss.resteasy.util.Types;
 
-/**
- * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1 $
- */
+
 public class RadonMethodInjectorImpl implements MethodInjector {
 	protected Method method;
 	protected Method invokedMethod;

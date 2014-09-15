@@ -26,7 +26,7 @@ public class TestPathClassLoader extends TestCase {
 	
 	public void testStart() throws Exception {
 		
-		DirClassLoader inner = new DirClassLoader("./test") ;
+		DynamicClassLoader inner = new DynamicClassLoader("./test") ;
 		final OuterClassLoader reloader = new OuterClassLoader(inner);
 
 		FileAlterationObserver fo = new FileAlterationObserver(new File("./test")) ;
@@ -35,7 +35,7 @@ public class TestPathClassLoader extends TestCase {
 			public void onFileChange(File file) {
 				try {
 					Debug.line(file + " changed !");
-					reloader.change(new DirClassLoader("./test"));
+					reloader.change(new DynamicClassLoader("./test"));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -47,7 +47,7 @@ public class TestPathClassLoader extends TestCase {
 		
 		
 		Radon radon = RadonConfiguration.newBuilder(9000)
-					.add("/hello/*", new PathHandler(reloader, SayHello.class).prefixURI("/hello"))
+					.add("/hello/*", PathHandler.reload(SayHello.class).prefixURI("/hello"))
 					.add("/hi/*", new PathHandler(SayHi.class).prefixURI("/hi"))
 					.start().get() ;
 		radon.getConfig().getServiceContext().putAttribute("greeting", "Hello") ;

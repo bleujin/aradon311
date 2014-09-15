@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
+import net.ion.framework.util.FileUtil;
 import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.MapUtil;
 
@@ -25,7 +26,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * This utility class loader allows to load and execute classes from the directory. During initialisation it will load all jar files in the directory and than it will be able to load these classes on demand
  */
-public class DirClassLoader extends ClassLoader {
+public class DynamicClassLoader extends ClassLoader {
 	// All details about resource
 	private class ResourceDescriptor {
 		public String dirPath; // Full path to the base directory which has this resource
@@ -39,17 +40,17 @@ public class DirClassLoader extends ClassLoader {
 	private Map<String, ResourceDescriptor> classesMap = MapUtil.newMap(); // Contains information about resources which represent classes. Key - class name, ResourceDescriptor
 	private Map<String, Class> alreadyLoadedClasses = MapUtil.newMap(); // Key - class name. Contents class
 
-	public DirClassLoader(String homeDirectory) throws IOException {
-		super(DirClassLoader.class.getClassLoader());
+	public DynamicClassLoader(String homeDirectory) throws IOException {
+		super(DynamicClassLoader.class.getClassLoader());
 		readDirectory(new File(homeDirectory).getAbsoluteFile());
 	}
 
-	public DirClassLoader(String homeDirectory, ClassLoader parentClassLoader) throws IOException {
+	public DynamicClassLoader(String homeDirectory, ClassLoader parentClassLoader) throws IOException {
 		super(parentClassLoader);
 		readDirectory(new File(homeDirectory).getAbsoluteFile());
 	}
 
-	public DirClassLoader addDirectory(String additionalDirectory) throws IOException {
+	public DynamicClassLoader addDirectory(String additionalDirectory) throws IOException {
 		readDirectory(new File(additionalDirectory).getAbsoluteFile());
 		return this;
 	}
@@ -58,8 +59,20 @@ public class DirClassLoader extends ClassLoader {
 	private void readDirectory(File fromDirectory) throws IOException {
 		if (!fromDirectory.exists())
 			throw new IllegalArgumentException("Directory " + fromDirectory.getAbsolutePath() + " does not exists");
-		if (!fromDirectory.isDirectory())
+		if (!fromDirectory.isDirectory()) {
 			throw new IllegalArgumentException(fromDirectory.getAbsolutePath() + " is not a directory");
+		} else {
+			File[] clzFiles = FileUtil.findFiles(fromDirectory, new FileFilter() {
+				@Override
+				public boolean accept(File pathname) {
+					return pathname.getName().endsWith(".class");
+				}
+			}, true) ;
+			for (File clzFile : clzFiles) {
+				addResource(clzFile, fromDirectory.getAbsolutePath());
+			}
+		}
+
 		File[] listFiles = fromDirectory.listFiles(new FileFilter() {
 			public boolean accept(File pPathname) {
 				return pPathname.isFile();
@@ -188,5 +201,9 @@ public class DirClassLoader extends ClassLoader {
 		if (parentLoader == null)
 			parentLoader = getSystemClassLoader();
 		return parentLoader.getResourceAsStream(resourceName);
+	}
+	
+	public String toString(){
+		return "[DynamicClassLoader-" + hashCode() + "]" ;
 	}
 }

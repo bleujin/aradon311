@@ -11,7 +11,7 @@ public class OuterClassLoader extends ClassLoader{
 	}
 
 	
-	void change(ClassLoader delegate){
+	public void change(ClassLoader delegate){
 		this.delegate = delegate ;
 	}
 	

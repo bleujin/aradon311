@@ -2,7 +2,6 @@ package net.ion.radon.cload.cloader;
 
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.Executors;
 
 import junit.framework.TestCase;
@@ -16,27 +15,14 @@ import org.apache.commons.io.monitor.FileAlterationObserver;
 
 public class TestReloadClassLoad extends TestCase {
 
+	
+	
+	
+	
 	public void testReloadSourceLoader() throws Exception {
 
-		final File srcDir = new File("./test") ;
+		final ClassLoader classloader = PathClassLoader.createClassLoader(getClass().getClassLoader().getParent()) ;
 		
-		DirClassLoader inner = new DirClassLoader("./test") ;
-		final OuterClassLoader classloader = new OuterClassLoader(inner);
-
-		FileAlterationObserver fo = new FileAlterationObserver(srcDir) ;
-		fo.addListener(new AbstractListener() {
-			@Override
-			public void onFileChange(File file) {
-				try {
-					Debug.line(file + " changed !");
-					classloader.change(new DirClassLoader("./test"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		FileAlterationMonitor fam = new FileAlterationMonitor(1000, Executors.newScheduledThreadPool(1), fo);
-		fam.start();
 
 		new Thread() {
 			public void run() {
@@ -45,7 +31,7 @@ public class TestReloadClassLoad extends TestCase {
 						Thread.sleep(1000);
 						Object o = classloader.loadClass("net.ion.radon.cload.cloader.Main").newInstance();
 						((Runnable) o).run();
-					} catch (Exception e) {
+					} catch (Throwable e) {
 						e.printStackTrace();
 					}
 				}

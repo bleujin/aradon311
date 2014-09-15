@@ -1,5 +1,16 @@
 package org.jboss.resteasy.spi;
 
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import javax.ws.rs.ext.Providers;
+
 import org.jboss.resteasy.core.AcceptParameterHttpPreprocessor;
 import org.jboss.resteasy.core.AsynchronousDispatcher;
 import org.jboss.resteasy.core.Dispatcher;
@@ -9,19 +20,8 @@ import org.jboss.resteasy.logging.Logger;
 import org.jboss.resteasy.plugins.interceptors.SecurityInterceptor;
 import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.plugins.server.resourcefactory.JndiComponentResourceFactory;
-import org.jboss.resteasy.plugins.server.servlet.ResteasyContextParameters;
 import org.jboss.resteasy.util.GetRestful;
 import org.jboss.resteasy.util.PickConstructor;
-
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-import javax.ws.rs.ext.Providers;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This class is used to configure and initialize the core components of RESTEasy.
@@ -121,6 +121,7 @@ public class ResteasyDeployment {
 				InjectorFactory injectorFactory = null;
 				try {
 					Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(injectorFactoryClass);
+//					Class<?> clazz = getClass().getClassLoader().loadClass(injectorFactoryClass);
 					try {
 						Constructor constructor = clazz.getConstructor(ResteasyProviderFactory.class);
 						injectorFactory = (InjectorFactory) constructor.newInstance(providerFactory);

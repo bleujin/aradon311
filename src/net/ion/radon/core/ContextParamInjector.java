@@ -44,6 +44,10 @@ public class ContextParamInjector implements ValueInjector {
 			throw new InternalServerErrorException("Unknown @ContextParam: " + paramName + " for request context: ");
 		}
 		
+		if (TreeContext.class.getCanonicalName().equals(paramName)){
+			return rcontext ;
+		}
+		
 		Object result = rcontext.getAttributeObject(paramName, type) ;
 		if (result != null) return result ;
 		throw new InternalServerErrorException("Unknown @ContextParam: " + paramName + " for request context: ");

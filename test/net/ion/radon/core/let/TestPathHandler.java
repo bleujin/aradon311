@@ -87,7 +87,15 @@ public class TestPathHandler extends TestCase {
 		Debug.line(response.contentsString());
 	}
 	
+	public void testOnlyPath() throws Exception {
+		StubServer ss = StubServer.create(OnlyPath.class) ;
+		StubHttpResponse response = ss.request("/onlypath").postParam("name", "bleujin").post() ;
+		
+		Debug.line(response.contentsString());
+		
+	}
 
+	
 }
 
 @Path("/boost")
@@ -161,5 +169,16 @@ class PrefixLet {
 		}
 		return String.valueOf(file.exists()) ;
 	}
+	
+}
+
+@Path("/onlypath")
+class OnlyPath {
+	
+	@POST
+	public String onlyPath(@FormParam("name") String name){
+		return name ;
+	}
+	
 	
 }

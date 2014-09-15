@@ -34,6 +34,7 @@ public class BasicAuthenticationHandler extends AbstractHttpHandler {
 
 	public void handleHttpRequest(final HttpRequest request, final HttpResponse response, final HttpControl control) throws Exception {
 		String authHeader = request.header("Authorization");
+		
 		if (authHeader == null) {
 			needAuthentication(response);
 		} else {
@@ -65,5 +66,8 @@ public class BasicAuthenticationHandler extends AbstractHttpHandler {
 	private void needAuthentication(HttpResponse response) {
 		response.status(401).header("WWW-Authenticate", "Basic realm=\"" + realm + "\"").content("Need authentication").end();
 	}
-
+	
+	public int order() {
+		return -1;
+	}
 }

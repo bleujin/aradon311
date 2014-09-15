@@ -13,6 +13,7 @@ public class RadonBootstrap extends ConfigurationBootstrap {
 	private static final Map<String, String> PARAMS = new HashMap<String, String>() {
 		{
 //			put("resteasy.scan", "true");
+			put("resteasy.role.based.security", "true") ;
 			put("resteasy.resources", HiLet.class.getCanonicalName() + "," + NamasteLet.class.getCanonicalName());
 		}
 	};

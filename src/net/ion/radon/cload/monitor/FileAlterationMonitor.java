@@ -17,35 +17,28 @@
 
 package net.ion.radon.cload.monitor;
 
-import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.monitor.FileAlterationObserver;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
- * It's a runnable that spawns of a monitoring thread triggering the
- * the observers and managing the their listeners.
+ * It's a runnable that spawns of a monitoring thread triggering the the observers and managing the their listeners.
  */
 public final class FileAlterationMonitor {
 
 	private final long interval;
-	private final List<FileAlterationObserver> observers ;
-	private ScheduledExecutorService ses ;
-	private transient boolean running = true ;
+	private final List<FileAlterationObserver> observers;
+	private ScheduledExecutorService ses;
+	private transient boolean running = true;
 
-	public FileAlterationMonitor(long interval, ScheduledExecutorService ses,  FileAlterationObserver first, FileAlterationObserver... observers) {
-		this.ses = ses ;
-		this.observers = new CopyOnWriteArrayList<FileAlterationObserver>() ;
-		this.interval = interval ;
+	public FileAlterationMonitor(long interval, ScheduledExecutorService ses, FileAlterationObserver first, FileAlterationObserver... observers) {
+		this.ses = ses;
+		this.observers = new CopyOnWriteArrayList<FileAlterationObserver>();
+		this.interval = interval;
 		addObserver(first);
 		for (FileAlterationObserver observer : observers) {
 			addObserver(observer);
@@ -61,7 +54,8 @@ public final class FileAlterationMonitor {
 	}
 
 	public void removeObserver(FileAlterationObserver observer) {
-		while (observers.remove(observer)) ;
+		while (observers.remove(observer))
+			;
 	}
 
 	public Iterable getObservers() {
@@ -69,22 +63,25 @@ public final class FileAlterationMonitor {
 	}
 
 	public synchronized void start() throws Exception {
-		
+
 		Callable<Void> sjob = new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				for (FileAlterationObserver o : observers){
-					o.checkAndNotify(); 
+				try {
+					for (FileAlterationObserver o : observers) {
+						o.checkAndNotify();
+					}
+				} finally {
+					ses.schedule(this, interval, TimeUnit.MILLISECONDS);
 				}
-				ses.schedule(this, interval, TimeUnit.MILLISECONDS) ;
 				return null;
 			}
 		};
-		ses.schedule(sjob, interval, TimeUnit.MILLISECONDS) ;
+		ses.schedule(sjob, interval, TimeUnit.MILLISECONDS);
 	}
 
 	public synchronized void stop() throws Exception {
-		this.running = false ;
+		this.running = false;
 	}
 
 }

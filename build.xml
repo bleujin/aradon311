@@ -64,7 +64,10 @@
 		<echo>Copy to NISS</echo>
 		<copy file="publish/aradon311_${version.number}.${build.number}.jar" todir="../niss/lib/ref/" />
 						
-	</target>
+		<echo>Copy to TalkServer</echo>
+		<copy file="publish/aradon311_${version.number}.${build.number}.jar" todir="../talkserver/lib/ref/" />
+						
+			</target>
 	
 	
 </project>
