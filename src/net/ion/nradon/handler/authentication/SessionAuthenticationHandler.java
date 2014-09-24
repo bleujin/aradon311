@@ -1,17 +1,16 @@
 package net.ion.nradon.handler.authentication;
 
-import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
-import net.ion.framework.util.HashUtil;
-import net.ion.framework.util.StringUtil;
+import net.ion.framework.db.ThreadFactoryBuilder;
+import net.ion.framework.util.ObjectId;
 import net.ion.nradon.HttpControl;
 import net.ion.nradon.HttpRequest;
 import net.ion.nradon.HttpResponse;
 import net.ion.nradon.handler.AbstractHttpHandler;
 import net.ion.nradon.helpers.Base64;
 import net.ion.nradon.helpers.HttpCookie;
-
-import org.jboss.resteasy.util.HttpHeaderNames;
 
 public class SessionAuthenticationHandler extends AbstractHttpHandler {
 
@@ -22,27 +21,33 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 	private final String realm;
 	private final PasswordAuthenticator authenticator;
 
-	private final static String SessionID = "_AradonSessionId" ;
-	private final static String SessionTime = "_AradonSessionTime" ;
+	private final static String SessionKey = "_sessionid" ;
+	private SessionManager sessions ;
 	
 	public SessionAuthenticationHandler(PasswordAuthenticator authenticator) {
 		this(authenticator, "Secure Area");
 	}
 
 	public SessionAuthenticationHandler(PasswordAuthenticator authenticator, String realm) {
-		this.realm = realm;
-		this.authenticator = authenticator;
+		this(authenticator, realm, Executors.newSingleThreadScheduledExecutor(ThreadFactoryBuilder.createThreadFactory("sauth-thread-%d")));
 	}
 
+	public SessionAuthenticationHandler(PasswordAuthenticator authenticator, String realm, ScheduledExecutorService ses) {
+		this.realm = realm;
+		this.authenticator = authenticator;
+		this.sessions = SessionManager.create(ses) ;
+	}
+	
+
 	public void handleHttpRequest(final HttpRequest request, final HttpResponse response, final HttpControl control) throws Exception {
-		request.data(SessionTime, System.currentTimeMillis()) ;
-		
 		String authHeader = request.header("Authorization");
 		
-		if (authHeader == null && hasNotSessionKey(request)) {
-			needAuthentication(response);
-		} else if (hasValidSessionKey(request)) {
+		SessionInfo sinfo = session(request);
+		if (hasSessionKey(request) && sinfo != SessionInfo.NOTEXIST) {
+			request.data(SessionInfo.class.getCanonicalName(), sinfo) ;
 			control.nextHandler();
+		} else if (authHeader == null) {
+			needAuthentication(response);
 		} else {
 			if (authHeader.startsWith(BASIC_PREFIX)) {
 				String decoded = new String(Base64.decode(authHeader.substring(BASIC_PREFIX.length())));
@@ -71,30 +76,27 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 	}
 
 	private void saveSessionKey(HttpRequest request, HttpResponse response) {
-		InetSocketAddress inetAddr = (InetSocketAddress)request.remoteAddress() ;
-		String hostName = inetAddr.getHostName() ;
-		String agentName = StringUtil.defaultIfEmpty(request.header(HttpHeaderNames.USER_AGENT), "") ;
-
-		response.cookie(new HttpCookie(SessionID, "" + HashUtil.hash(hostName + agentName))) ;
-//		request.data(SessionID, HashUtil.hash(hostName + agentName)) ;
+		String sessionKey = new ObjectId().toString();
+		SessionInfo created = sessions.newSession(sessionKey) ;
+		request.data(SessionInfo.class.getCanonicalName(), created) ;
+		
+		HttpCookie cookie = new HttpCookie(SessionKey, sessionKey);
+		cookie.setVersion(0);
+//		cookie.setDomain("61.250.201.157") ;
+//		cookie.setPath("/");
+		cookie.setSecure(true);
+		cookie.setMaxAge(60*60*8); // 8hour
+		response.cookie(cookie) ;
+	}
+	
+	private SessionInfo session(HttpRequest request){
+		HttpCookie cookie = request.cookie(SessionKey) ;
+		if (cookie == null) return SessionInfo.NOTEXIST ;
+		return sessions.findSession(cookie.getValue()) ;
 	}
 
-	private boolean hasValidSessionKey(HttpRequest request) {
-		InetSocketAddress inetAddr = (InetSocketAddress)request.remoteAddress() ;
-		String hostName = inetAddr.getHostName() ;
-		String agentName = StringUtil.defaultIfEmpty(request.header(HttpHeaderNames.USER_AGENT), "") ;
-		
-//		Object svalue = request.data(SessionID);
-//		return svalue != null && svalue.equals(new Long(HashUtil.hash(hostName + agentName))) ;
-		
-		HttpCookie svalue = request.cookie(SessionID) ;
-		
-		return svalue != null && svalue.getValue().equals("" + HashUtil.hash(hostName + agentName)) ;
-	}
-
-	private boolean hasNotSessionKey(HttpRequest request) {
-		return request.cookie(SessionID) == null ;
-//		return request.data(SessionID) == null;
+	private boolean hasSessionKey(HttpRequest request) {
+		return request.cookie(SessionKey) != null ;
 	}
 
 	private void needAuthentication(HttpResponse response) {
@@ -105,3 +107,4 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 		return -1;
 	}
 }
+

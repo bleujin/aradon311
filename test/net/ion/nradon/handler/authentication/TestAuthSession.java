@@ -2,8 +2,15 @@ package net.ion.nradon.handler.authentication;
 
 
 
+import java.nio.charset.Charset;
+import java.util.List;
+
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
 import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
+import net.ion.framework.util.InfinityThread;
 import net.ion.nradon.HttpControl;
 import net.ion.nradon.HttpHandler;
 import net.ion.nradon.HttpRequest;
@@ -11,6 +18,7 @@ import net.ion.nradon.HttpResponse;
 import net.ion.nradon.Radon;
 import net.ion.nradon.config.RadonConfiguration;
 import net.ion.nradon.handler.event.ServerEvent.EventType;
+import net.ion.radon.aclient.Cookie;
 import net.ion.radon.aclient.NewClient;
 import net.ion.radon.aclient.Realm;
 import net.ion.radon.aclient.Realm.RealmBuilder;
@@ -19,11 +27,15 @@ import net.ion.radon.aclient.RequestBuilder;
 import net.ion.radon.aclient.Response;
 
 import org.jboss.netty.handler.codec.http.HttpMethod;
+import org.jboss.resteasy.util.HttpHeaderNames;
 
 public class TestAuthSession extends TestCase {
 	
 	public void testInfinityRun() throws Exception {
-		
+		Radon radon = RadonConfiguration.newBuilder(9800)
+				.add(new SessionAuthenticationHandler(new InMemoryPasswords().add("bleujin", "redf")))
+				.add(new HelloWorld()).startRadon() ;
+		new InfinityThread().startNJoin(); 
 	}
 
 	public void testSession() throws Exception {
@@ -33,14 +45,12 @@ public class TestAuthSession extends TestCase {
 		
 		
 		NewClient nc = NewClient.create() ;
-		Response r1 = nc.prepareRequest(firstRequst()).execute().get();
-		Debug.line(r1.getCookies()) ;
+		Response r1 = nc.prepareRequest(firstRequst()).execute().get(); // auth
 		assertEquals("HelloWorld", r1.getTextBody());
 
-		Request req2 = secondRequest();
-		Debug.line(req2.getCookies());
-		Response response = nc.prepareRequest(req2).execute().get();
-		Debug.line(response.getTextBody());
+		Request req2 = secondRequest(r1.getCookies());
+		Response r2 = nc.prepareRequest(req2).execute().get();
+		assertEquals("HelloWorld", r2.getTextBody());
 		
 		nc.close(); 
 		radon.stop().get() ;
@@ -52,8 +62,12 @@ public class TestAuthSession extends TestCase {
 		return request;
 	}
 	
-	private Request secondRequest() {
-		return new RequestBuilder().setUrl("http://localhost:9800/hello").setMethod(HttpMethod.GET) .build() ;
+	private Request secondRequest(List<Cookie> cookies) {
+		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9800/hello").setMethod(HttpMethod.GET);
+		for(Cookie c : cookies){
+			builder.addCookie(c) ;
+		}
+		return builder.build() ;
 		
 	}
 	
@@ -71,7 +85,13 @@ class HelloWorld implements HttpHandler{
 	}
 	
 	@Override
+	@Produces(MediaType.TEXT_PLAIN)
 	public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control) throws Exception {
-		response.content("HelloWorld").end() ;
+		
+		SessionInfo sinfo = (SessionInfo)request.data(SessionInfo.class.getCanonicalName()) ;
+		Debug.line(sinfo, sinfo.hasValue("myinfo"));
+		sinfo.register("myinfo", request.header(HttpHeaderNames.USER_AGENT)) ;
+		
+		response.content("HelloWorld").charset(Charset.forName("UTF-8")).end() ;
 	}	
 }
