@@ -1,16 +1,18 @@
 package org.jboss.resteasy.specimpl;
 
-import org.jboss.resteasy.util.Encode;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.jboss.resteasy.util.Encode;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -56,7 +58,7 @@ public class UriInfoImpl implements UriInfo {
 		if (queryString == null) {
 			this.absolutePathWithQueryString = absolutePath;
 		} else {
-			this.absolutePathWithQueryString = URI.create(absolutePath.toString() + "?" + queryString);
+			this.absolutePathWithQueryString = URI.create(absolutePath.toString() + "?" + URLEncoder.encode(queryString));
 		}
 	}
 

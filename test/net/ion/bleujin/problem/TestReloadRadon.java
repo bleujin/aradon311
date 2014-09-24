@@ -9,6 +9,8 @@ import net.ion.framework.util.Debug;
 import net.ion.framework.util.InfinityThread;
 import net.ion.nradon.Radon;
 import net.ion.nradon.config.RadonConfiguration;
+import net.ion.nradon.handler.logging.LoggingHandler;
+import net.ion.nradon.handler.logging.SimpleLogSink;
 import net.ion.radon.aclient.NewClient;
 import net.ion.radon.aclient.Response;
 import net.ion.radon.cload.cloader.DynamicClassLoader;
@@ -25,6 +27,7 @@ public class TestReloadRadon extends TestCase {
 	public void testStart() throws Exception {
 		
 		RadonConfiguration.newBuilder(9500)
+			.add(new LoggingHandler(new SimpleLogSink()))
 			.add(PathHandler.reload(HelloName.class))
 			.start().get() ;
 		

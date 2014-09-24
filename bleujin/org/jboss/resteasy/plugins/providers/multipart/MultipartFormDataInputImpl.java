@@ -10,6 +10,8 @@ import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Providers;
 
+import net.ion.framework.util.ListUtil;
+
 import org.apache.james.mime4j.field.ContentDispositionField;
 import org.apache.james.mime4j.field.FieldName;
 import org.apache.james.mime4j.message.BodyPart;
@@ -20,8 +22,7 @@ import org.jboss.resteasy.util.GenericType;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @version $Revision: 1 $
  */
-public class MultipartFormDataInputImpl extends MultipartInputImpl implements
-		MultipartFormDataInput {
+public class MultipartFormDataInputImpl extends MultipartInputImpl implements MultipartFormDataInput {
 	protected Map<String, InputPart> formData = new HashMap<String, InputPart>();
 	protected Map<String, List<InputPart>> formDataMap = new HashMap<String, List<InputPart>>();
 
@@ -38,8 +39,7 @@ public class MultipartFormDataInputImpl extends MultipartInputImpl implements
 		return formDataMap;
 	}
 
-	public <T> T getFormDataPart(String key, Class<T> rawType, Type genericType)
-			throws IOException {
+	public <T> T getFormDataPart(String key, Class<T> rawType, Type genericType) throws IOException {
 		List<InputPart> list = getFormDataMap().get(key);
 		if (list == null || list.isEmpty())
 			return null;
@@ -49,8 +49,7 @@ public class MultipartFormDataInputImpl extends MultipartInputImpl implements
 		return part.getBody(rawType, genericType);
 	}
 
-	public <T> T getFormDataPart(String key, GenericType<T> type)
-			throws IOException {
+	public <T> T getFormDataPart(String key, GenericType<T> type) throws IOException {
 		List<InputPart> list = getFormDataMap().get(key);
 		if (list == null || list.isEmpty())
 			return null;
@@ -63,34 +62,42 @@ public class MultipartFormDataInputImpl extends MultipartInputImpl implements
 	@Override
 	protected InputPart extractPart(BodyPart bodyPart) throws IOException {
 		InputPart currPart = super.extractPart(bodyPart);
-		Field disposition = bodyPart.getHeader().getField(
-				FieldName.CONTENT_DISPOSITION);
+		Field disposition = bodyPart.getHeader().getField(FieldName.CONTENT_DISPOSITION);
 		if (disposition == null)
-			throw new RuntimeException(
-					"Could find no Content-Disposition header within part");
+			throw new RuntimeException("Could find no Content-Disposition header within part");
 		if (disposition instanceof ContentDispositionField) {
-			String name = ((ContentDispositionField) disposition)
-					.getParameter("name");
+			String name = ((ContentDispositionField) disposition).getParameter("name");
 			List<InputPart> list = formDataMap.get(name);
 			if (list == null) {
 				list = new LinkedList<InputPart>();
+				
 				formData.put(name, currPart);
 				formDataMap.put(name, list);
 			}
 			list.add(currPart);
 		} else {
-			throw new RuntimeException(
-					"Could not parse Content-Disposition for MultipartFormData: "
-							+ disposition);
+			throw new RuntimeException("Could not parse Content-Disposition for MultipartFormData: " + disposition);
 		}
 
 		return currPart;
 	}
 
-   protected void finalize() throws Throwable
-   {
-      close();
-   }
+	protected void finalize() throws Throwable {
+		close();
+	}
 
-
+	public <T> List<T> dataHandle(FormDataHandler<T> handler) throws IOException {
+		Map<String, List<InputPart>> map = getFormDataMap() ;
+		List<T> results = ListUtil.newList() ;
+		for (String key : map.keySet()) {
+			List<InputPart> ilist = map.get(key) ;
+			for (InputPart ip : ilist) {
+				InputBody ibody = InputBody.create(key, ip);
+				T result = handler.handle(ibody) ;
+				results.add(result) ;
+				ibody.close() ;
+			}
+		}
+		return results ;
+	}
 }

@@ -89,7 +89,8 @@ public class ResourceMethodRegistry implements Registry {
 	public void addResourceFactory(ResourceFactory ref, String base) {
 		
 		Class<?> clazz = ref.getScannableClass();
-//		addResourceFactory(ref, base, clazz); 
+//		addResourceFactory(ref, base, clazz);
+//		if (true) return ;
 		
 		Class restful = GetRestful.getRootResourceClass(clazz);
 		if (restful == null) {

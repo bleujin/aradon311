@@ -120,12 +120,13 @@ public class ResteasyDeployment {
 			if (injectorFactoryClass != null) {
 				InjectorFactory injectorFactory = null;
 				try {
-					Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(injectorFactoryClass);
+					Class<?> clazz = classLoader().loadClass(injectorFactoryClass);
 //					Class<?> clazz = getClass().getClassLoader().loadClass(injectorFactoryClass);
 					try {
 						Constructor constructor = clazz.getConstructor(ResteasyProviderFactory.class);
 						injectorFactory = (InjectorFactory) constructor.newInstance(providerFactory);
 					} catch (Exception e) {
+						e.printStackTrace(); 
 					}
 					if (injectorFactory == null)
 						injectorFactory = (InjectorFactory) clazz.newInstance();
@@ -144,7 +145,7 @@ public class ResteasyDeployment {
 				for (Map.Entry<String, String> entry : constructedDefaultContextObjects.entrySet()) {
 					Class<?> key = null;
 					try {
-						key = Thread.currentThread().getContextClassLoader().loadClass(entry.getKey());
+						key = classLoader().loadClass(entry.getKey());
 					} catch (ClassNotFoundException e) {
 						throw new RuntimeException("Unable to instantiate context object " + entry.getKey(), e);
 					}
@@ -301,7 +302,7 @@ public class ResteasyDeployment {
 			for (String resource : scannedResourceClasses) {
 				Class clazz = null;
 				try {
-					clazz = Thread.currentThread().getContextClassLoader().loadClass(resource.trim());
+					clazz = classLoader().loadClass(resource.trim());
 				} catch (ClassNotFoundException e) {
 					throw new RuntimeException(e);
 				}
@@ -312,7 +313,7 @@ public class ResteasyDeployment {
 			for (String resource : resourceClasses) {
 				Class clazz = null;
 				try {
-					clazz = Thread.currentThread().getContextClassLoader().loadClass(resource.trim());
+					clazz = classLoader().loadClass(resource.trim());
 				} catch (ClassNotFoundException e) {
 					throw new RuntimeException(e);
 				}
@@ -335,6 +336,10 @@ public class ResteasyDeployment {
 		}
 	}
 
+	private ClassLoader classLoader() {
+		return Thread.currentThread().getContextClassLoader();
+	}
+
 	protected void registerJndiComponentResource(String resource) {
 		String[] config = resource.trim().split(";");
 		if (config.length < 3) {
@@ -343,7 +348,7 @@ public class ResteasyDeployment {
 		String jndiName = config[0];
 		Class clazz = null;
 		try {
-			clazz = Thread.currentThread().getContextClassLoader().loadClass(config[1]);
+			clazz = classLoader().loadClass(config[1]);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Could not find class " + config[1] + " provided to JNDI Component Resource", e);
 		}
@@ -404,7 +409,7 @@ public class ResteasyDeployment {
 	protected void registerProvider(String clazz) {
 		Class provider = null;
 		try {
-			provider = Thread.currentThread().getContextClassLoader().loadClass(clazz.trim());
+			provider = classLoader().loadClass(clazz.trim());
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}

@@ -1,5 +1,12 @@
 package org.jboss.resteasy.core.registry;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.ws.rs.core.PathSegment;
+
 import org.jboss.resteasy.core.ResourceInvoker;
 import org.jboss.resteasy.specimpl.UriInfoImpl;
 import org.jboss.resteasy.spi.BadRequestException;
@@ -7,12 +14,6 @@ import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.NotFoundException;
 import org.jboss.resteasy.util.Encode;
 import org.jboss.resteasy.util.PathHelper;
-
-import javax.ws.rs.core.PathSegment;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -219,6 +220,10 @@ public class PathParamSegment extends Segment implements Comparable<PathParamSeg
 				count++;
 		}
 		return count;
+	}
+	
+	public String toString(){
+		return pathExpression ;
 	}
 
 }

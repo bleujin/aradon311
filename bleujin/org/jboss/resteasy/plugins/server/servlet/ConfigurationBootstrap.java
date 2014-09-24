@@ -1,14 +1,5 @@
 package org.jboss.resteasy.plugins.server.servlet;
 
-import org.jboss.resteasy.logging.Logger;
-import org.jboss.resteasy.spi.ResteasyConfiguration;
-import org.jboss.resteasy.spi.ResteasyDeployment;
-import org.jboss.resteasy.util.HttpHeaderNames;
-import org.scannotation.AnnotationDB;
-
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -16,13 +7,23 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.ext.Provider;
+
+import org.jboss.resteasy.logging.Logger;
+import org.jboss.resteasy.spi.ResteasyConfiguration;
+import org.jboss.resteasy.spi.ResteasyDeployment;
+import org.jboss.resteasy.util.HttpHeaderNames;
+import org.scannotation.AnnotationDB;
+
 /**
  * Create a deployment from String-based configuration data
  * 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @version $Revision: 1 $
  */
-abstract public class ConfigurationBootstrap implements ResteasyConfiguration {
+public abstract class ConfigurationBootstrap implements ResteasyConfiguration {
 	private static Logger logger = null;
 	private ResteasyDeployment deployment = new ResteasyDeployment();
 

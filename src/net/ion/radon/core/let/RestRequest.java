@@ -57,9 +57,10 @@ public class RestRequest extends HttpRequestImpl {
 
         // org.jboss.resteasy.plugins.server.servlet.ServletUtil is doing this differently (much more complex - not sure why)
         URI uri = URI.create(request.uri());
+        URI absPath = URI.create(uri.getPath()) ;
         // URI uri = URI.create(StringUtil.strip(request.uri(), prefixURI));
         
-        UriInfo uriInfo = new UriInfoImpl(uri, uri, uri.getPath(), uri.getQuery(), PathSegmentImpl.parseSegments(StringUtil.removeStart(uri.getPath(), prefixURI), true));
+        UriInfo uriInfo = new UriInfoImpl(absPath, uri, uri.getPath(), uri.getQuery(), PathSegmentImpl.parseSegments(StringUtil.removeStart(uri.getPath(), prefixURI), true));
         String body = request.body();
         InputStream in = body == null ? new ByteArrayInputStream(new byte[0]) : new ByteArrayInputStream(body.getBytes("UTF-8"));
         return new RestRequest(request, in, headers, request.method(), uriInfo);

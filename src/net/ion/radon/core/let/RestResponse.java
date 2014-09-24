@@ -75,7 +75,8 @@ public class RestResponse implements org.jboss.resteasy.spi.HttpResponse {
     }
 
     public boolean isCommitted() {
-        throw new UnsupportedOperationException();
+    	return false ;
+        // throw new UnsupportedOperationException();
     }
 
     public void reset() {

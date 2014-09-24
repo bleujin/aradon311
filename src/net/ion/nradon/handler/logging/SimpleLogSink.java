@@ -45,7 +45,7 @@ public class SimpleLogSink implements LogSink {
 	}
 
 	public void httpEnd(HttpRequest request, HttpResponse response) {
-		custom(request, "HTTP-END", null); // TODO: Time request
+		custom(request, "HTTP-END[" + response.status() + "]", null); // TODO: Time request
 	}
 
 	public void webSocketConnectionOpen(WebSocketConnection connection) {

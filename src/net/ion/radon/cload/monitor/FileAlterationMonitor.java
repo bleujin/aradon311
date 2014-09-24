@@ -71,6 +71,9 @@ public final class FileAlterationMonitor {
 					for (FileAlterationObserver o : observers) {
 						o.checkAndNotify();
 					}
+				} catch(Exception e){
+					e.printStackTrace(); 
+					throw e ;
 				} finally {
 					ses.schedule(this, interval, TimeUnit.MILLISECONDS);
 				}

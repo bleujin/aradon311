@@ -10,13 +10,15 @@ import net.ion.framework.util.StringUtil;
 
 public class FileMetaType {
 
-	private static Map<String, String> extToTypeMap = load();
+	private static Map<String, String> extToTypeMap ;
+	{
+		extToTypeMap = load() ;
+	}
 
 	private static Map<String, String> load() {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(FileMetaType.class.getResourceAsStream("./minetype.txt")));
-
 		Map<String, String> result = MapUtil.newMap() ;
 		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(FileMetaType.class.getResourceAsStream("minetype.map")));
 			while (true) {
 				String line = reader.readLine();
 				if (StringUtil.isBlank(line))
@@ -31,8 +33,12 @@ public class FileMetaType {
 		return result ;
 	}
 	
+	public final static void init(){
+		extToTypeMap = load() ;
+	}
+	
 	public static String mediaType(String fileName){
-		String ext = StringUtil.substringAfter(fileName, ".") ;
+		String ext = StringUtil.substringAfterLast(fileName, ".") ;
 		return StringUtil.defaultIfEmpty(extToTypeMap.get(ext), "application/octet-stream") ;
 	}
 

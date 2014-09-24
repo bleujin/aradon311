@@ -30,6 +30,8 @@ import net.ion.radon.core.let.PathHandler;
 
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+import org.jboss.resteasy.plugins.providers.multipart.FormDataHandler;
+import org.jboss.resteasy.plugins.providers.multipart.InputBody;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.spi.HttpRequest;
@@ -50,9 +52,9 @@ public class TestMultiPart extends TestCase {
 		super.tearDown();
 	}
 
-	public void testUpload() throws Exception {
+	public void testInput() throws Exception {
 		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9000/file/input").setMethod(HttpMethod.POST);
-		builder.addBodyPart(new StringPart("name", "value", "UTF-8")).addBodyPart(new FilePart("myfile", new File("resource/ptest.prop"), "image/jpeg", "UTF-8"));
+		builder.addBodyPart(new StringPart("name", "value", "UTF-8")).addBodyPart(new FilePart("myfile", new File("resource/한글.prop"), "image/jpeg", "UTF-8"));
 
 		NewClient client = NewClient.create();
 		Response response = client.prepareRequest(builder.build()).execute().get();
@@ -71,6 +73,31 @@ public class TestMultiPart extends TestCase {
 		Debug.line(response.getTextBody(), response.getStatus());
 	}
 
+	
+	public void testParseInfo() throws Exception {
+		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9000/file/pinfo").setMethod(HttpMethod.POST);
+		builder.addBodyPart(new StringPart("name", "value", "UTF-8"))
+			.addBodyPart(new FilePart("myfile", new File("resource/favicon.ico"), "image/jpeg", "UTF-8"))
+			.addBodyPart(new FilePart("myfile", new File("resource/한글.prop"), "plain/txt", "UTF-8")) ;
+
+		NewClient client = NewClient.create();
+		Response response = client.prepareRequest(builder.build()).execute().get();
+		Debug.line(response.getTextBody(), response.getStatus());
+	}
+
+	
+	public void testHandler() throws Exception {
+		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9000/file/handle").setMethod(HttpMethod.POST);
+		builder.addBodyPart(new StringPart("name", "value", "UTF-8"))
+			.addBodyPart(new FilePart("myfile", new File("resource/favicon.ico"), "image/jpeg", "UTF-8"))
+			.addBodyPart(new FilePart("myfile", new File("resource/한글.prop"), "plain/txt", "UTF-8")) ;
+
+		NewClient client = NewClient.create();
+		Response response = client.prepareRequest(builder.build()).execute().get();
+		Debug.line(response.getTextBody(), response.getStatus());
+	}
+	
+	
 }
 
 @Path("/file")
@@ -117,6 +144,36 @@ class UploadFileService {
 		return "";
 	}
 
+	@POST
+	@Path("pinfo")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public String parseEntityInfo(@Context HttpRequest request, MultipartFormDataInput  input) throws IOException {
+// http://www.mkyong.com/webservices/jax-rs/file-upload-example-in-resteasy/
+		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+		for (Entry<String, List<InputPart>> entry : uploadForm.entrySet()) {
+			for (InputPart part : entry.getValue()) {
+				
+				InputBody ib = InputBody.create(entry.getKey(), part) ;
+				Debug.line(ib.name(), ib.isFilePart(), ib.mediaType(), ib.charset(), ib.transferEncoding(), ib.filename(), ib.asStream());
+			}
+		}
+
+		return "";
+	}
+
+	@POST
+	@Path("handle")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public String parseEntityHandler(@Context HttpRequest request, MultipartFormDataInput  input) throws IOException {
+		input.dataHandle(new FormDataHandler<Void>() {
+			@Override
+			public Void handle(InputBody ib) throws IOException {
+				Debug.line(ib.name(), ib.isFilePart(), ib.mediaType(), ib.charset(), ib.transferEncoding(), ib.filename(), ib.asStream());
+				return null;
+			}
+		}) ;
+		return "";
+	}
 }
 
 class FileUploadForm implements Serializable {

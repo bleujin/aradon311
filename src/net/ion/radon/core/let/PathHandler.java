@@ -3,10 +3,10 @@ package net.ion.radon.core.let;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
-import net.ion.framework.util.Debug;
+import net.ion.framework.logging.LogBroker;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.nradon.HttpControl;
@@ -41,52 +41,47 @@ public class PathHandler implements HttpHandler {
 	public static HttpHandler create(Class... resources) {
 		return new PathHandler(resources);
 	}
+	
+	// run with debug mode
+	public static PathHandler reload(final Class... resources) throws Exception {
+		final Logger logger = LogBroker.getLogger(PathHandler.class) ;
+		final PathHandler result = new PathHandler(resources) ;
 
-
-	public static PathHandler reload(Class... resources) throws Exception {
-		final MyPathClassLoader ploader = new MyPathClassLoader(PathHandler.class.getClassLoader().getParent());
-
-		final List<String> clzNames = ListUtil.newList();
-		for (Class clz : resources) {
-			clzNames.add(clz.getCanonicalName());
-		}
-
-		List<Class> newClz = ListUtil.newList();
-		for (String clz : clzNames) {
-			newClz.add(ploader.loadClass(clz));
-		}
-
-		final PathHandler result = new PathHandler(newClz.toArray(new Class[0]));
-
-		ploader.start(new AfterReLoader() {
-			@Override
-			public void onReload(ClassLoader classloader) {
-				try {
-					List<Class> newClz = ListUtil.newList();
-					for (String clz : clzNames) {
-						newClz.add(ploader.loadClass(clz));
-					}
-					result.init(new URL[0], newClz.toArray(new Class[0]));
-				} catch (ClassNotFoundException ex) {
-					ex.printStackTrace();
-				}
-			}
-		});
-
+//		final List<String> clzNames = ListUtil.newList() ;
+//		for (Class clz : resources) {
+//			clzNames.add(clz.getCanonicalName()) ;
+//		}
+//		
+//		MyPathClassLoader mcl = new MyPathClassLoader(PathHandler.class.getClassLoader()) ;
+//		mcl.start(new AfterReLoader() {
+//			@Override
+//			public void onReload(ClassLoader classloader) {
+//				logger.warning(" reloaded !");
+//				try {
+//					List<Class> clzz = ListUtil.newList();
+//					for (String clzName : clzNames) {
+//						Class clz = classloader.loadClass(clzName);
+//						clzz.add(clz);
+//						
+//						
+//					}
+//					result.init(new URL[0], clzz.toArray(new Class[0]));
+//				} catch (ClassNotFoundException e) {
+//					Debug.line(e.getMessage());
+////					e.printStackTrace();
+//				}
+//			}
+//		});
 		return result;
 	}
 
-	// @Deprecated
-	// PathHandler(URLClassLoader cl, Class... resources) {
-	// init(cl != null ? cl.getURLs() : new URL[0], resources);
-	// }
-
 	private void init(URL[] scanningUrls, Class... resources) {
 
-		ConfigurationBootstrap bootstrap = new PathBootstrap(scanningUrls, this.cloader, resources);
+		ConfigurationBootstrap bootstrap = new PathBootstrap(scanningUrls, this.cloader);
 		ResteasyDeployment deployment = bootstrap.createDeployment();
 		deployment.setInjectorFactoryClass(RadonInjectorFactory.class.getCanonicalName());
-		// deployment.getResources().addAll(Arrays.asList(resources));
+		deployment.getActualResourceClasses().clear(); 
+		deployment.getActualResourceClasses().addAll(ListUtil.toList(resources)) ;
 		deployment.start();
 		dispatcher = deployment.getDispatcher();
 	}
@@ -124,11 +119,12 @@ public class PathHandler implements HttpHandler {
 
 }
 
+
 class MyPathClassLoader {
 
 	private OuterClassLoader classloader;
 	private File srcDir;
-
+	
 	public MyPathClassLoader(ClassLoader parent) throws Exception {
 		this.srcDir = new File("./bin");
 
@@ -146,7 +142,6 @@ class MyPathClassLoader {
 			@Override
 			public void onFileChange(File file) {
 				try {
-					Debug.line(file + " changed !");
 					DynamicClassLoader newLoader = new DynamicClassLoader("./bin", getClass().getClassLoader().getParent());
 					newLoader.addDirectory("./lib/ref");
 					newLoader.addDirectory("./lib/reflib");

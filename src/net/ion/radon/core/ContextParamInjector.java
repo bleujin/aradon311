@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.ws.rs.core.PathSegment;
 
@@ -22,6 +23,7 @@ public class ContextParamInjector implements ValueInjector {
 	private String paramName;
 	private boolean encode;
 	private Class type;
+	private Logger logger = Logger.getLogger(ContextParam.class.getCanonicalName()) ;
 
 	public ContextParamInjector(Class type, Type genericType, AccessibleObject target, String paramName, String defaultValue, boolean encode, Annotation[] annotations, ResteasyProviderFactory factory) {
 		this.type = type;
@@ -50,7 +52,9 @@ public class ContextParamInjector implements ValueInjector {
 		
 		Object result = rcontext.getAttributeObject(paramName, type) ;
 		if (result != null) return result ;
-		throw new InternalServerErrorException("Unknown @ContextParam: " + paramName + " for request context: ");
+		logger.warning("Unknown @ContextParam: " + paramName + " for request context: ");
+		
+		return null ;
 	}
 
 	public Object inject() {

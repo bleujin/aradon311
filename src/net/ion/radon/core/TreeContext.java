@@ -86,8 +86,9 @@ public class TreeContext {
 		return attrs.remove(key) != null;
 	}
 
-	public Object putAttribute(String key, Object value) {
-		return attrs.put(key, value);
+	public <T> T putAttribute(String key, T value) {
+		attrs.put(key, value);
+		return value ;
 	}
 
 	public Map getAttributes() {

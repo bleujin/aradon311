@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import net.ion.framework.util.SetUtil;
-import net.ion.framework.util.StringUtil;
-
 import org.jboss.resteasy.plugins.server.servlet.ConfigurationBootstrap;
 
 public class PathBootstrap extends ConfigurationBootstrap {
@@ -20,14 +17,9 @@ public class PathBootstrap extends ConfigurationBootstrap {
 	private final URL[] scanningUrls;
 	private final ClassLoader cloader;
 
-	public PathBootstrap(URL[] scanningUrls, ClassLoader cloader, Class... resources) {
+	public PathBootstrap(URL[] scanningUrls, ClassLoader cloader) {
 		this.scanningUrls = scanningUrls;
 		this.cloader = cloader ;
-		Set<String> clzNames = SetUtil.newSet() ;
-		for (Class res : resources) {
-			clzNames.add(res.getCanonicalName()) ;
-		}
-		PARAMS.put("resteasy.resources", StringUtil.join(clzNames, ",")) ;
 	}
 
 	@Override

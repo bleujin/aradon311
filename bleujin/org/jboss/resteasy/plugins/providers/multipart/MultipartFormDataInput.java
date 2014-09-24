@@ -30,4 +30,6 @@ public interface MultipartFormDataInput extends MultipartInput {
 			throws IOException;
 
 	<T> T getFormDataPart(String key, GenericType<T> type) throws IOException;
+	
+	<T> List<T> dataHandle(FormDataHandler<T> handler) throws IOException;
 }

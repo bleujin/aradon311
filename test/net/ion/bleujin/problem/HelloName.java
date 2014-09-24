@@ -5,20 +5,29 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 
-@Path("/hihi")
+@Path("/hello")
 public class HelloName {
 	
 	
 	@GET
-	@Path("/{name}")
-	public String hello(@PathParam("name") String name){
-		return "dcdcd  " + name ;
+	@Path("/c1/{name}")
+	public String hi(@PathParam("name") String name){
+		return "eee." + name ;
 	}
-	
+
 	@GET
-	@Path("/{name}/{greeting}")
-	public String hi(@PathParam("name") String name, @PathParam("greeting") String greeting){
-		return greeting + " " + name ;
+	@Path("/c2/{name}")
+	public String hi2(@PathParam("name") String name){
+		return "cc . " + name ;
 	}
 	
+
+	@GET
+	@Path("/c3/{name}")
+	public String hi3(@PathParam("name") String name){
+		return "ee. " + name ;
+	}
+	
+
+
 }
