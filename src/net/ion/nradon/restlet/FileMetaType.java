@@ -11,7 +11,7 @@ import net.ion.framework.util.StringUtil;
 public class FileMetaType {
 
 	private static Map<String, String> extToTypeMap ;
-	{
+	static {
 		extToTypeMap = load() ;
 	}
 
@@ -33,8 +33,16 @@ public class FileMetaType {
 		return result ;
 	}
 	
-	public final static void init(){
-		extToTypeMap = load() ;
+//	public final static void init(){
+//		extToTypeMap = load() ;
+//	}
+	
+	public static void set(String ext, String mediaType){
+		extToTypeMap.put(ext, mediaType) ;
+	}
+	
+	public static void set(String ext, MediaType mediaType){
+		extToTypeMap.put(ext, mediaType.getName()) ;
 	}
 	
 	public static String mediaType(String fileName){

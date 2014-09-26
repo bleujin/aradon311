@@ -47,6 +47,7 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 			request.data(SessionInfo.class.getCanonicalName(), sinfo) ;
 			control.nextHandler();
 		} else if (authHeader == null) {
+//		if (authHeader == null) {
 			needAuthentication(response);
 		} else {
 			if (authHeader.startsWith(BASIC_PREFIX)) {

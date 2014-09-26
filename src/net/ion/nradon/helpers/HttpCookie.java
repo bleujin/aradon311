@@ -737,6 +737,7 @@ public final class HttpCookie implements Cloneable {
 			}
 
 			// assign attribute to cookie
+			if (name.startsWith("__")) continue ; // __utmz etc : google anal
 			assignAttribute(cookie, name, value);
 		}
 

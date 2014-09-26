@@ -29,7 +29,7 @@ import net.ion.radon.aclient.Response;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.resteasy.util.HttpHeaderNames;
 
-public class TestAuthSession extends TestCase {
+public class TestSessionAuth extends TestCase {
 	
 	public void testInfinityRun() throws Exception {
 		Radon radon = RadonConfiguration.newBuilder(9800)
