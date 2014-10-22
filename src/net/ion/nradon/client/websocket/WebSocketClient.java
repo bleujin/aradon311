@@ -4,7 +4,6 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import net.ion.nradon.netty.codec.http.websocketx.BinaryWebSocketFrame;
@@ -27,7 +26,6 @@ import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
 
-import com.sun.org.apache.bcel.internal.generic.IREM;
 
 public class WebSocketClient {
 

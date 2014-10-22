@@ -96,7 +96,7 @@ public abstract class AbstractResourceHandler extends AbstractHttpHandler {
 				// TODO: Check bytes read match expected encoding of mime-type
 				response.header("Content-Type", mimeType);
 
-				byte[] dynamicContents = templateEngine.process(staticContents, path, request.data(TemplateEngine.TEMPLATE_CONTEXT));
+				byte[] dynamicContents = templateEngine.process(staticContents, path, request);
                 ByteBuffer contents = ByteBuffer.wrap(dynamicContents);
 
                 if (maybeServeRange(request, contents, response)) {

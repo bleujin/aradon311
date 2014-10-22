@@ -9,7 +9,7 @@ import net.ion.framework.util.MapUtil;
 import net.ion.framework.util.ObjectUtil;
 
 public class SessionManager {
-	private Map<String, SessionInfo> sessionMap = MapUtil.newMap();
+	private Map<String, SessionInfo> sessionMap =  MapUtil.newSyncMap();
 	private ScheduledExecutorService ses;
 	private static long LimitSecond = 60 * 60;
 	private static int CheckSecond = 5;

@@ -2,6 +2,7 @@ package net.ion.nradon.netty;
 
 import static org.jboss.netty.channel.Channels.pipeline;
 
+import java.io.Closeable;
 import java.io.InputStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URI;
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLEngine;
 
 import net.ion.framework.db.ThreadFactoryBuilder;
+import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.ListUtil;
 import net.ion.nradon.HttpHandler;
 import net.ion.nradon.Radon;
@@ -167,6 +169,11 @@ public class NettyWebServer extends Radon {
 			OnEventObject eobj = rootContext.getAttributeObject(key, OnEventObject.class) ;
 			if (eobj != null){
 				eobj.onEvent(etype, this);
+			}
+			
+			Object obj = rootContext.getAttributeObject(key) ;
+			if (obj != null && obj instanceof Closeable && etype == EventType.STOP){
+				IOUtil.close((Closeable)obj) ;
 			}
 		}
 	}

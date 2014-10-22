@@ -23,6 +23,8 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 
 	private final static String SessionKey = "_sessionid" ;
 	private SessionManager sessions ;
+
+	private String domainName = "localhost";
 	
 	public SessionAuthenticationHandler(PasswordAuthenticator authenticator) {
 		this(authenticator, "Secure Area");
@@ -36,6 +38,11 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 		this.realm = realm;
 		this.authenticator = authenticator;
 		this.sessions = SessionManager.create(ses) ;
+	}
+	
+	public SessionAuthenticationHandler domainName(String domainName){
+		this.domainName = domainName ;
+		return this ;
 	}
 	
 
@@ -77,14 +84,14 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 	}
 
 	private void saveSessionKey(HttpRequest request, HttpResponse response) {
-		String sessionKey = new ObjectId().toString();
+		String sessionKey = hasSessionKey(request) ? request.cookieValue(SessionKey) : new ObjectId().toString();
 		SessionInfo created = sessions.newSession(sessionKey) ;
 		request.data(SessionInfo.class.getCanonicalName(), created) ;
 		
 		HttpCookie cookie = new HttpCookie(SessionKey, sessionKey);
-		cookie.setVersion(0);
-//		cookie.setDomain("61.250.201.157") ;
-//		cookie.setPath("/");
+		cookie.setVersion(1);
+		cookie.setDomain(domainName) ;
+		cookie.setPath("/");
 		cookie.setSecure(true);
 		cookie.setMaxAge(60*60*8); // 8hour
 		response.cookie(cookie) ;
