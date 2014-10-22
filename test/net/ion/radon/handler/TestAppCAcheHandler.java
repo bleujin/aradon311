@@ -17,7 +17,7 @@ public class TestAppCAcheHandler extends TestCase{
 	}
 	
 	public void testMakeCacheMenifest() throws Exception {
-		AppCacheHandler h = new AppCacheHandler(new File("./resource/temp")) ;
+		AppCacheHandler h = new AppCacheHandler().appendDir("", new File("./resource/temp"), "*.png") ;
 		
 		Debug.line(h.makeCacheResource());
 	}
