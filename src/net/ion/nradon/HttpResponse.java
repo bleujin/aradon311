@@ -1,10 +1,9 @@
 package net.ion.nradon;
 
+import java.net.HttpCookie;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Date;
-
-import net.ion.nradon.helpers.HttpCookie;
 
 public interface HttpResponse {
 	String SET_COOKIE_HEADER = "Set-Cookie";

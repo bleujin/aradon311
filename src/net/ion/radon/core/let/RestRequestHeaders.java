@@ -1,5 +1,6 @@
 package net.ion.radon.core.let;
 
+import java.net.HttpCookie;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 import net.ion.nradon.HttpRequest;
-import net.ion.nradon.helpers.HttpCookie;
 
 import org.jboss.resteasy.core.Headers;
 import org.jboss.resteasy.util.HttpHeaderNames;

@@ -4,11 +4,14 @@ package net.ion.nradon.handler.authentication;
 
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import junit.framework.TestCase;
+import net.ion.framework.db.ThreadFactoryBuilder;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.InfinityThread;
 import net.ion.nradon.HttpControl;
@@ -32,15 +35,19 @@ import org.jboss.resteasy.util.HttpHeaderNames;
 public class TestSessionAuth extends TestCase {
 	
 	public void testInfinityRun() throws Exception {
+		ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor(ThreadFactoryBuilder.createThreadFactory("sauth-thread-%d")) ;
+		SimpleSessionManager smanager = SimpleSessionManager.create(ses) ;
 		Radon radon = RadonConfiguration.newBuilder(9800)
-				.add(new SessionAuthenticationHandler(new InMemoryPasswords().add("bleujin", "redf")))
+				.add(new SessionAuthenticationHandler(new InMemoryPasswords().add("bleujin", "redf"), smanager))
 				.add(new HelloWorld()).startRadon() ;
 		new InfinityThread().startNJoin(); 
 	}
 
 	public void testSession() throws Exception {
+		ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor(ThreadFactoryBuilder.createThreadFactory("sauth-thread-%d")) ;
+		SimpleSessionManager smanager = SimpleSessionManager.create(ses) ;
 		Radon radon = RadonConfiguration.newBuilder(9800)
-			.add(new SessionAuthenticationHandler(new InMemoryPasswords().add("bleujin", "redf")))
+			.add(new SessionAuthenticationHandler(new InMemoryPasswords().add("bleujin", "redf"), smanager))
 			.add(new HelloWorld()).startRadon() ;
 		
 		
@@ -53,6 +60,7 @@ public class TestSessionAuth extends TestCase {
 		assertEquals("HelloWorld", r2.getTextBody());
 		
 		nc.close(); 
+		ses.shutdown(); 
 		radon.stop().get() ;
 	}
 
@@ -88,7 +96,7 @@ class HelloWorld implements HttpHandler{
 	@Produces(MediaType.TEXT_PLAIN)
 	public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control) throws Exception {
 		
-		SessionInfo sinfo = (SessionInfo)request.data(SessionInfo.class.getCanonicalName()) ;
+		SimpleSessionInfo sinfo = (SimpleSessionInfo)request.data(SimpleSessionInfo.class.getCanonicalName()) ;
 		Debug.line(sinfo, sinfo.hasValue("myinfo"));
 		sinfo.register("myinfo", request.header(HttpHeaderNames.USER_AGENT)) ;
 		

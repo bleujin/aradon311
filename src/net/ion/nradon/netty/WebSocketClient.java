@@ -4,6 +4,7 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static org.jboss.netty.channel.Channels.pipeline;
 
 import java.io.InputStream;
+import java.net.HttpCookie;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.security.MessageDigest;
@@ -25,7 +26,6 @@ import net.ion.nradon.handler.ReconnectingWebSocketHandler;
 import net.ion.nradon.handler.exceptions.PrintStackTraceExceptionHandler;
 import net.ion.nradon.handler.exceptions.SilentExceptionHandler;
 import net.ion.nradon.helpers.Base64;
-import net.ion.nradon.helpers.HttpCookie;
 import net.ion.nradon.helpers.RadonException;
 import net.ion.nradon.helpers.SslFactory;
 

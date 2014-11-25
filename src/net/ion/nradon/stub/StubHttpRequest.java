@@ -1,5 +1,6 @@
 package net.ion.nradon.stub;
 
+import java.net.HttpCookie;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URI;
@@ -9,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 import net.ion.nradon.HttpRequest;
-import net.ion.nradon.helpers.HttpCookie;
 import net.ion.nradon.helpers.QueryParameters;
 
 import org.apache.commons.collections.DefaultMapEntry;

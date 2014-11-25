@@ -5,6 +5,7 @@ import static net.ion.nradon.testutil.HttpClient.httpGet;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.net.HttpCookie;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +20,6 @@ import net.ion.nradon.HttpResponse;
 import net.ion.nradon.Radon;
 import net.ion.nradon.config.RadonConfiguration;
 import net.ion.nradon.config.RadonConfigurationBuilder;
-import net.ion.nradon.helpers.HttpCookie;
 
 import org.junit.After;
 import org.junit.Test;

@@ -1,11 +1,11 @@
 package net.ion.nradon.wrapper;
 
+import java.net.HttpCookie;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Date;
 
 import net.ion.nradon.HttpResponse;
-import net.ion.nradon.helpers.HttpCookie;
 
 public class HttpResponseWrapper implements HttpResponse {
 

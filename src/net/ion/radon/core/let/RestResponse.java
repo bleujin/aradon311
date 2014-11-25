@@ -2,6 +2,7 @@ package net.ion.radon.core.let;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.HttpCookie;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
@@ -9,7 +10,6 @@ import javax.ws.rs.core.NewCookie;
 import net.ion.nradon.HttpControl;
 import net.ion.nradon.HttpRequest;
 import net.ion.nradon.HttpResponse;
-import net.ion.nradon.helpers.HttpCookie;
 
 import org.jboss.resteasy.core.Dispatcher;
 

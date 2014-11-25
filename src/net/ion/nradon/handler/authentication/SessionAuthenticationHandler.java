@@ -1,16 +1,13 @@
 package net.ion.nradon.handler.authentication;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.net.HttpCookie;
 
-import net.ion.framework.db.ThreadFactoryBuilder;
 import net.ion.framework.util.ObjectId;
 import net.ion.nradon.HttpControl;
 import net.ion.nradon.HttpRequest;
 import net.ion.nradon.HttpResponse;
 import net.ion.nradon.handler.AbstractHttpHandler;
 import net.ion.nradon.helpers.Base64;
-import net.ion.nradon.helpers.HttpCookie;
 
 public class SessionAuthenticationHandler extends AbstractHttpHandler {
 
@@ -21,23 +18,19 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 	private final String realm;
 	private final PasswordAuthenticator authenticator;
 
-	private final static String SessionKey = "_sessionid" ;
+	private final static String SessionKey = "_radon_sessionid" ;
 	private SessionManager sessions ;
 
 	private String domainName = "localhost";
 	
-	public SessionAuthenticationHandler(PasswordAuthenticator authenticator) {
-		this(authenticator, "Secure Area");
+	public SessionAuthenticationHandler(PasswordAuthenticator authenticator, SessionManager smanager) {
+		this(authenticator, "Secure Area", smanager);
 	}
 
-	public SessionAuthenticationHandler(PasswordAuthenticator authenticator, String realm) {
-		this(authenticator, realm, Executors.newSingleThreadScheduledExecutor(ThreadFactoryBuilder.createThreadFactory("sauth-thread-%d")));
-	}
-
-	public SessionAuthenticationHandler(PasswordAuthenticator authenticator, String realm, ScheduledExecutorService ses) {
+	public SessionAuthenticationHandler(PasswordAuthenticator authenticator, String realm, SessionManager smanager) {
 		this.realm = realm;
 		this.authenticator = authenticator;
-		this.sessions = SessionManager.create(ses) ;
+		this.sessions = smanager ;
 	}
 	
 	public SessionAuthenticationHandler domainName(String domainName){
@@ -50,11 +43,10 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 		String authHeader = request.header("Authorization");
 		
 		SessionInfo sinfo = session(request);
-		if (hasSessionKey(request) && sinfo != SessionInfo.NOTEXIST) {
-			request.data(SessionInfo.class.getCanonicalName(), sinfo) ;
+		if (hasSessionKey(request) && sinfo != SimpleSessionInfo.NOTEXIST) {
+			request.data(SimpleSessionInfo.class.getCanonicalName(), sinfo) ;
 			control.nextHandler();
 		} else if (authHeader == null) {
-//		if (authHeader == null) {
 			needAuthentication(response);
 		} else {
 			if (authHeader.startsWith(BASIC_PREFIX)) {
@@ -84,22 +76,22 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 	}
 
 	private void saveSessionKey(HttpRequest request, HttpResponse response) {
-		String sessionKey = hasSessionKey(request) ? request.cookieValue(SessionKey) : new ObjectId().toString();
-		SessionInfo created = sessions.newSession(sessionKey) ;
-		request.data(SessionInfo.class.getCanonicalName(), created) ;
+		String sessionId = hasSessionKey(request) ? request.cookieValue(SessionKey) : new ObjectId().toString();
+		SessionInfo created = sessions.newSession(sessionId) ;
+		request.data(SimpleSessionInfo.class.getCanonicalName(), created) ;
 		
-		HttpCookie cookie = new HttpCookie(SessionKey, sessionKey);
-		cookie.setVersion(1);
+		HttpCookie cookie = new HttpCookie(SessionKey, sessionId);
+		cookie.setVersion(0);
 		cookie.setDomain(domainName) ;
 		cookie.setPath("/");
 		cookie.setSecure(true);
-		cookie.setMaxAge(60*60*8); // 8hour
+		cookie.setMaxAge(60*60*3); // 3 hour
 		response.cookie(cookie) ;
 	}
 	
 	private SessionInfo session(HttpRequest request){
 		HttpCookie cookie = request.cookie(SessionKey) ;
-		if (cookie == null) return SessionInfo.NOTEXIST ;
+		if (cookie == null) return SimpleSessionInfo.NOTEXIST ;
 		return sessions.findSession(cookie.getValue()) ;
 	}
 

@@ -3,6 +3,7 @@ package net.ion.nradon.stub;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpCookie;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -13,7 +14,6 @@ import java.util.Map;
 
 import net.ion.nradon.HttpResponse;
 import net.ion.nradon.helpers.DateHelper;
-import net.ion.nradon.helpers.HttpCookie;
 
 /**
  * Implementation of HttpResponse that is easy to construct manually, and inspect results. Useful for testing.

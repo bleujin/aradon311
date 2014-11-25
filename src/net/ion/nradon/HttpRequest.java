@@ -1,11 +1,10 @@
 package net.ion.nradon;
 
+import java.net.HttpCookie;
 import java.net.SocketAddress;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import net.ion.nradon.helpers.HttpCookie;
 
 public interface HttpRequest extends DataHolder {
 

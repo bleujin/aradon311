@@ -103,6 +103,7 @@ public class AppCacheHandler implements HttpHandler {
 			result.appendLine("#" + new Date());
 			result.appendLine("");
 			
+			result.appendLine("CACHE:");
 			for (DirConfig dconfig : dconfigs) {
 				if (dconfig.isReferenceFile) continue ;
 				final WildcardFileFilter targetFilter = new WildcardFileFilter(dconfig.extNames);
@@ -113,6 +114,7 @@ public class AppCacheHandler implements HttpHandler {
 			}
 			result.appendLine("");
 			result.appendLine("NETWORK:");
+			result.appendLine("/outer.htm");
 			result.appendLine("*");
 			
 			result.appendLine("");
@@ -133,7 +135,7 @@ public class AppCacheHandler implements HttpHandler {
 	public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control) throws Exception {
 		if ("/cache.appcache".equals(request.uri())) {
 			response
-				.header(HttpHeaderNames.CACHE_CONTROL, "no-store, no-cache").header(HttpHeaderNames.EXPIRES, "0")
+				.header(HttpHeaderNames.CACHE_CONTROL, "").header(HttpHeaderNames.EXPIRES, "0")
 				.content(cacheContent.toString()).header(HttpHeaderNames.CONTENT_TYPE, "text/cache-manifest").end();
 		} else if ("/cache.appcache.reload".equals(request.uri())){
 			cacheContent = makeCacheResource() ;

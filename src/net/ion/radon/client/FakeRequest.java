@@ -1,5 +1,7 @@
 package net.ion.radon.client;
 
+import java.net.URLEncoder;
+
 import net.ion.framework.util.StringUtil;
 import net.ion.nradon.HttpHandler;
 import net.ion.nradon.stub.StubHttpControl;
@@ -48,8 +50,9 @@ public class FakeRequest {
 	
 	
 	public FakeRequest postParam(String name, String value){
+		String encoded = URLEncoder.encode(value) ;
 		String bodyString = request.body() ;
-		if (StringUtil.isBlank(bodyString)) body(name + "=" + value) ; 
+		if (StringUtil.isBlank(bodyString)) body(name + "=" + encoded) ; 
 		else body(bodyString + "&" + name + "=" + value) ; 
 		return this ;
 	}

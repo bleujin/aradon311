@@ -20,8 +20,6 @@ import net.ion.nradon.config.RadonConfiguration;
 import net.ion.nradon.restlet.FileMetaType;
 import net.ion.radon.core.let.PathHandler;
 
-import org.jboss.resteasy.util.HttpHeaderNames;
-
 public class TestStaticTagCache extends TestCase {
 
 	public void testRunner() throws Exception {
@@ -68,7 +66,7 @@ class NormalResource {
 		String type = FileMetaType.mediaType(file.getName()) ;		
 		return Response
 				.status(javax.ws.rs.core.Response.Status.OK.getStatusCode())
-				.header(HttpHeaderNames.CACHE_CONTROL, "no-cache").header(HttpHeaderNames.EXPIRES, "-1")
+//				.header(HttpHeaderNames.CACHE_CONTROL, "no-cache").header(HttpHeaderNames.EXPIRES, "-1")
 				.type(type).entity(new FileInputStream(file)).build();
 	}
 }

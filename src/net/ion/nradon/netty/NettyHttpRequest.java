@@ -1,5 +1,6 @@
 package net.ion.nradon.netty;
 
+import java.net.HttpCookie;
 import java.net.SocketAddress;
 import java.net.URI;
 import java.util.HashMap;
@@ -7,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.ion.nradon.helpers.HttpCookie;
+import net.ion.nradon.helpers.InboundCookieParser;
 import net.ion.nradon.helpers.QueryParameters;
 
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -55,7 +56,7 @@ public class NettyHttpRequest implements net.ion.nradon.HttpRequest {
 	}
 
 	public List<HttpCookie> cookies() {
-		return HttpCookie.parse(header(COOKIE_HEADER));
+		return InboundCookieParser.parse(headers(COOKIE_HEADER)) ;
 	}
 
 	public HttpCookie cookie(String name) {
