@@ -53,7 +53,7 @@ public class FakeRequest {
 		String encoded = URLEncoder.encode(value) ;
 		String bodyString = request.body() ;
 		if (StringUtil.isBlank(bodyString)) body(name + "=" + encoded) ; 
-		else body(bodyString + "&" + name + "=" + value) ; 
+		else body(bodyString + "&" + name + "=" + encoded) ; 
 		return this ;
 	}
 	

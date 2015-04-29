@@ -97,7 +97,7 @@ class HelloWorld implements HttpHandler{
 	public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control) throws Exception {
 		
 		SimpleSessionInfo sinfo = (SimpleSessionInfo)request.data(SimpleSessionInfo.class.getCanonicalName()) ;
-		Debug.line(sinfo, sinfo.hasValue("myinfo"));
+		Debug.line(sinfo, sinfo.hasValue("myinfo"), request.data("user"));
 		sinfo.register("myinfo", request.header(HttpHeaderNames.USER_AGENT)) ;
 		
 		response.content("HelloWorld").charset(Charset.forName("UTF-8")).end() ;

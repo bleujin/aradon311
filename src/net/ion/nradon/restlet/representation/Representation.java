@@ -190,7 +190,7 @@ public abstract class Representation extends RepresentationInfo {
 
 	public abstract void write(java.io.Writer writer) throws IOException;
 
-	public abstract void write(java.nio.channels.WritableByteChannel writableChannel) throws IOException;
+//	public abstract void write(java.nio.channels.WritableByteChannel writableChannel) throws IOException;
 
 	public abstract void write(OutputStream outputStream) throws IOException;
 

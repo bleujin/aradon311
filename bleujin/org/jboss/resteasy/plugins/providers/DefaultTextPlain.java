@@ -1,6 +1,10 @@
 package org.jboss.resteasy.plugins.providers;
 
-import org.jboss.resteasy.util.TypeConverter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -10,11 +14,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+
+import org.jboss.resteasy.util.TypeConverter;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -47,7 +48,7 @@ public class DefaultTextPlain implements MessageBodyReader, MessageBodyWriter {
 	public void writeTo(Object o, Class type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
 		String charset = mediaType.getParameters().get("charset");
 		if (charset == null)
-			entityStream.write(o.toString().getBytes());
+			entityStream.write(o.toString().getBytes("UTF-8"));
 		else
 			entityStream.write(o.toString().getBytes(charset));
 	}

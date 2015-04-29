@@ -12,7 +12,7 @@ import net.ion.radon.client.StubServer;
 public class TestRemainPath extends TestCase{
 
 	@GET @POST
-	@Path("/path/{remain: [A-Za-z0-9_]*}")
+	@Path("/path/{remain: [A-Za-z0-9_\\.\\/]*}")
 	public String hello(@PathParam("remain") String remain){
 		return remain ; 
 	}
@@ -36,7 +36,7 @@ public class TestRemainPath extends TestCase{
 
 	public void testStubWithParameter2() throws Exception {
 		StubServer ss = StubServer.create(getClass()) ;
-		assertEquals("bleujin", ss.request("/hello/path/bleujin?name=bleujin").post().contentsString());
+		assertEquals("bleujin.txt/no123", ss.request("/hello/path/bleujin.txt/no123?name=bleujin").post().contentsString());
 	}
 
 	public void testExtend() throws Exception {

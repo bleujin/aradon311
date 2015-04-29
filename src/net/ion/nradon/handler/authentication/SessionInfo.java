@@ -11,5 +11,9 @@ public interface SessionInfo {
 	public SessionInfo register(String name, Object value);
 
 	public boolean hasValue(String name);
+	
+	public Object value(String name) ;
+
+	public <T> T value(String name, T dftValue) ;
 
 }

@@ -25,6 +25,7 @@ public class TestFirst extends TestCase{
 		RadonConfigurationBuilder builder = RadonConfiguration.newBuilder(Executors.newSingleThreadExecutor(), 9000);
 		Radon radon = builder.add(new AbstractHttpHandler() {
 			public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control) throws Exception {
+				
 				uri.set(request.uri()) ;
 				hostHeader.set(request.header("Host"));
 				latch.countDown(); 

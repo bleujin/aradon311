@@ -3,6 +3,7 @@ package net.ion.nradon.handler.authentication;
 import java.util.Map;
 
 import net.ion.framework.util.MapUtil;
+import net.ion.framework.util.ObjectUtil;
 
 public class SimpleSessionInfo implements SessionInfo {
 	
@@ -45,4 +46,13 @@ public class SimpleSessionInfo implements SessionInfo {
 	public boolean hasValue(String name){
 		return sinfo.containsKey(name) ;
 	}
+	
+	public Object value(String name){
+		return ObjectUtil.coalesce(sinfo.get(name), ObjectUtil.NULL) ;
+	}
+
+	public <T> T value(String name, T dftValue){
+		return ObjectUtil.coalesce((T)sinfo.get(name), dftValue) ;
+	}
+
 }

@@ -1,16 +1,17 @@
 package org.jboss.resteasy.core.interception;
 
-import org.jboss.resteasy.spi.interception.MessageBodyWriterContext;
-import org.jboss.resteasy.spi.interception.MessageBodyWriterInterceptor;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+
+import org.jboss.resteasy.spi.interception.MessageBodyWriterContext;
+import org.jboss.resteasy.spi.interception.MessageBodyWriterInterceptor;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>

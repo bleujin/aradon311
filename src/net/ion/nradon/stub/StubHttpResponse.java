@@ -1,7 +1,9 @@
 package net.ion.nradon.stub;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpCookie;
 import java.nio.ByteBuffer;
@@ -12,8 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.ion.framework.util.Debug;
 import net.ion.nradon.HttpResponse;
 import net.ion.nradon.helpers.DateHelper;
+import net.ion.nradon.restlet.MediaType;
+
+import org.jboss.resteasy.util.HttpHeaderNames;
 
 /**
  * Implementation of HttpResponse that is easy to construct manually, and inspect results. Useful for testing.
@@ -112,6 +118,10 @@ public class StubHttpResponse implements HttpResponse {
 	public byte[] contents() {
 		return contents.toByteArray();
 	}
+	
+	public InputStream contentStream(){
+		return new ByteArrayInputStream(contents()) ;
+	}
 
 	public String contentsString() {
 		try {
@@ -152,5 +162,13 @@ public class StubHttpResponse implements HttpResponse {
 	@Override
 	public String toString() {
 		return "StubHttpResponse{" + "charset=" + charset + ", status=" + status + ", headers=" + headers + ", error=" + error + ", ended=" + ended + ", contents=" + contentsString() + '}';
+	}
+	
+	public void debugPrint(){
+		Debug.println(contentsString());
+	}
+
+	public MediaType contentType() {
+		return MediaType.valueOf(header(HttpHeaderNames.CONTENT_TYPE));
 	}
 }

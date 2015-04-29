@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.channels.Channel;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SelectableChannel;
 
 import net.ion.nradon.restlet.data.CharacterSet;
@@ -123,7 +125,6 @@ public class IoUtils {
 		return result;
 	}
 
-
 	// [ifndef gwt] method
 	/**
 	 * Copies characters from a reader to a writer. When the reading is done, the reader is closed.
@@ -146,6 +147,9 @@ public class IoUtils {
 		reader.close();
 	}
 
+	public static ReadableByteChannel getChannel(InputStream inputStream) {
+		return (inputStream != null) ? Channels.newChannel(inputStream) : null;
+	}
 
 
 }

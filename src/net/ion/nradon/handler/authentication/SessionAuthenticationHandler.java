@@ -21,7 +21,7 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 	private final static String SessionKey = "_radon_sessionid" ;
 	private SessionManager sessions ;
 
-	private String domainName = "localhost";
+//	private String domainName = "localhost";
 	
 	public SessionAuthenticationHandler(PasswordAuthenticator authenticator, SessionManager smanager) {
 		this(authenticator, "Secure Area", smanager);
@@ -33,10 +33,10 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 		this.sessions = smanager ;
 	}
 	
-	public SessionAuthenticationHandler domainName(String domainName){
-		this.domainName = domainName ;
-		return this ;
-	}
+//	public SessionAuthenticationHandler domainName(String domainName){
+//		this.domainName = domainName ;
+//		return this ;
+//	}
 	
 
 	public void handleHttpRequest(final HttpRequest request, final HttpResponse response, final HttpControl control) throws Exception {
@@ -45,6 +45,7 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 		SessionInfo sinfo = session(request);
 		if (hasSessionKey(request) && sinfo != SimpleSessionInfo.NOTEXIST) {
 			request.data(SimpleSessionInfo.class.getCanonicalName(), sinfo) ;
+			request.data(USERNAME, sinfo.value(USERNAME)) ;
 			control.nextHandler();
 		} else if (authHeader == null) {
 			needAuthentication(response);
@@ -58,7 +59,7 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 					PasswordAuthenticator.ResultCallback callback = new PasswordAuthenticator.ResultCallback() {
 						public void success() {
 							request.data(USERNAME, username);
-							saveSessionKey(request, response) ;
+							saveSessionKey(request, response, username) ;
 							control.nextHandler();
 						}
 
@@ -75,14 +76,16 @@ public class SessionAuthenticationHandler extends AbstractHttpHandler {
 		}
 	}
 
-	private void saveSessionKey(HttpRequest request, HttpResponse response) {
+	private void saveSessionKey(HttpRequest request, HttpResponse response, String userName) {
 		String sessionId = hasSessionKey(request) ? request.cookieValue(SessionKey) : new ObjectId().toString();
 		SessionInfo created = sessions.newSession(sessionId) ;
+		created.register(USERNAME, userName) ;
+		
 		request.data(SimpleSessionInfo.class.getCanonicalName(), created) ;
 		
 		HttpCookie cookie = new HttpCookie(SessionKey, sessionId);
 		cookie.setVersion(0);
-		cookie.setDomain(domainName) ;
+//		cookie.setDomain(domainName) ;
 		cookie.setPath("/");
 		cookie.setSecure(true);
 		cookie.setMaxAge(60*60*3); // 3 hour

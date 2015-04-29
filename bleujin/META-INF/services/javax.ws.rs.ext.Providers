@@ -11,6 +11,7 @@ org.jboss.resteasy.plugins.providers.FormUrlEncodedProvider
 org.jboss.resteasy.plugins.providers.FileProvider
 // org.jboss.resteasy.plugins.providers.FileRangeWriter
 org.jboss.resteasy.plugins.providers.StreamingOutputProvider
+org.jboss.resteasy.plugins.providers.UncertainOutputProvider
 org.jboss.resteasy.plugins.providers.IIOImageProvider
 // org.jboss.resteasy.plugins.providers.SerializableProvider
 // org.jboss.resteasy.plugins.interceptors.CacheControlFeature
@@ -33,3 +34,4 @@ org.jboss.resteasy.plugins.providers.multipart.MapMultipartFormDataWriter
 org.jboss.resteasy.plugins.providers.multipart.MultipartFormAnnotationReader
 org.jboss.resteasy.plugins.providers.multipart.MultipartFormAnnotationWriter
 org.jboss.resteasy.plugins.providers.multipart.MimeMultipartProvider
+net.ion.nradon.restlet.representation.RepresentationProvider

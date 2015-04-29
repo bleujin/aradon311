@@ -1,5 +1,19 @@
 package org.jboss.resteasy.core;
 
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.MessageBodyWriter;
+
 import org.jboss.resteasy.core.interception.ServerMessageBodyWriterContext;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.HttpResponse;
@@ -10,19 +24,6 @@ import org.jboss.resteasy.spi.interception.PostProcessInterceptor;
 import org.jboss.resteasy.util.CommitHeaderOutputStream;
 import org.jboss.resteasy.util.HttpHeaderNames;
 import org.jboss.resteasy.util.HttpResponseCodes;
-
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.MessageBodyWriter;
-import java.io.OutputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -206,6 +207,7 @@ public class ServerResponse extends Response {
 			if (messageBodyWriterInterceptors == null || messageBodyWriterInterceptors.length == 0) {
 				writer.writeTo(ent, type, generic, annotations, contentType, getMetadata(), os);
 			} else {
+				
 				ServerMessageBodyWriterContext ctx = new ServerMessageBodyWriterContext(messageBodyWriterInterceptors, writer, ent, type, generic, annotations, contentType, getMetadata(), os, request);
 				ctx.proceed();
 			}
