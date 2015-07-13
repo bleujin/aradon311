@@ -10,6 +10,7 @@ public class TestFileMetaType extends TestCase{
 //		FileMetaType.init(); 
 		
 		Debug.line(FileMetaType.mediaType("1.htm")) ;
+		Debug.line(FileMetaType.mediaType("c:/dd/1.htm")) ;
 		Debug.line(FileMetaType.mediaType2("1.htm").getName()) ;
 	}
 }

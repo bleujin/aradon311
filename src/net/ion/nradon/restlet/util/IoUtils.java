@@ -10,9 +10,11 @@ import java.nio.channels.Channel;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SelectableChannel;
+import java.util.concurrent.ExecutorService;
 
 import net.ion.nradon.restlet.data.CharacterSet;
 import net.ion.nradon.restlet.data.Range;
+import net.ion.nradon.restlet.representation.PipeStream;
 import net.ion.nradon.restlet.representation.Representation;
 
 public class IoUtils {
@@ -151,5 +153,38 @@ public class IoUtils {
 		return (inputStream != null) ? Channels.newChannel(inputStream) : null;
 	}
 
+	
+	public static InputStream getStream(ExecutorService es, final Representation representation) {
+		InputStream result = null;
+		if (representation == null) {
+			return null;
+		}
+
+		final PipeStream pipe = new PipeStream();
+
+		Runnable task = new Runnable() {
+			public void run() {
+				try {
+					java.io.OutputStream os = pipe.getOutputStream();
+					representation.write(os);
+					os.write(-1);
+					os.flush();
+					os.close();
+				} catch (IOException ioe) {
+					ioe.printStackTrace(); 
+				}
+			}
+		};
+
+		if (es == null) {
+			es.submit(task);
+		} else {
+			new Thread(task).start();
+		}
+
+		result = pipe.getInputStream();
+
+		return result;
+	}
 
 }

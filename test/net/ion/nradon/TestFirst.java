@@ -46,6 +46,13 @@ public class TestFirst extends TestCase{
 		assertEquals("www.aradon.com", hostHeader.get());
 	}
 	
-	
+	public static void main(String[] args) throws Exception {
+		RadonConfigurationBuilder builder = RadonConfiguration.newBuilder(Executors.newSingleThreadExecutor(), 9000);
+		Radon radon = builder.add(new AbstractHttpHandler() {
+			public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control) throws Exception {
+			}
+		}).start().get() ;
+		
+	}
 
 }
