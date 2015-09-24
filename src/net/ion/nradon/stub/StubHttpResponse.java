@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.ion.framework.util.Debug;
 import net.ion.nradon.HttpResponse;
@@ -149,6 +150,10 @@ public class StubHttpResponse implements HttpResponse {
 	public StubHttpResponse end() {
 		ended = true;
 		return this;
+	}
+	
+	public Set<String> headerNames(){
+		return headers.keySet() ;
 	}
 
 	public boolean ended() {
