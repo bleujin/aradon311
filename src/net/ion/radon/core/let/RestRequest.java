@@ -63,8 +63,8 @@ public class RestRequest extends HttpRequestImpl {
         UriInfo uriInfo = new UriInfoImpl(absPath, uri, uri.getPath(), uri.getQuery(), PathSegmentImpl.parseSegments(StringUtil.removeStart(uri.getPath(), prefixURI), true));
         
 
-        String body = request.body();
-        InputStream in = body == null ? new ByteArrayInputStream(new byte[0]) : new ByteArrayInputStream(body.getBytes("UTF-8"));
+        byte[] body = request.bodyAsBytes();
+        InputStream in = body == null ? new ByteArrayInputStream(new byte[0]) : new ByteArrayInputStream(body);
         return new RestRequest(request, in, headers, request.method(), uriInfo);
     }
     

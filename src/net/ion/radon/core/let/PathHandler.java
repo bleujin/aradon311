@@ -94,7 +94,11 @@ public class PathHandler implements HttpHandler {
 			RestResponse res = new RestResponse(request, response, dispatcher, control);
 			dispatcher.invoke(req, res);
 			if (res.wasHandled()) {
-				response.status(200).end();
+				if(response.status() >= 300){
+					response.end();
+				} else {
+					response.status(200).end();
+				}
 				// control.nextHandler(request, response, control);
 			} else {
 				// control.nextHandler();

@@ -30,6 +30,7 @@ import net.ion.radon.core.let.PathHandler;
 
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+import org.jboss.resteasy.annotations.providers.multipart.PartType;
 import org.jboss.resteasy.plugins.providers.multipart.FormDataHandler;
 import org.jboss.resteasy.plugins.providers.multipart.InputBody;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
@@ -43,7 +44,7 @@ public class TestMultiPart extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		this.radon = RadonConfiguration.newBuilder(9000).add(new PathHandler(UploadFileService.class)).startRadon();
+		this.radon = RadonConfiguration.newBuilder(9200).add(new PathHandler(UploadFileService.class)).startRadon();
 	}
 
 	@Override
@@ -52,9 +53,24 @@ public class TestMultiPart extends TestCase {
 		super.tearDown();
 	}
 
+
+	public void testUpload() throws Exception {
+		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9200/file/upload").setMethod(HttpMethod.POST);
+		builder.addBodyPart(new StringPart("name", "value", "UTF-8"))
+			.addBodyPart(new FilePart("myfile", new File("resource/temp/img/sadness.png")));
+
+		NewClient client = NewClient.create();
+		Response response = client.prepareRequest(builder.build()).execute().get();
+		Debug.line(response.getTextBody(), response.getStatus());
+		//
+		// assertEquals("hello.txt", json.asString("myfile"));
+		// assertEquals("value", json.asString("name"));
+	}
+	
 	public void testInput() throws Exception {
-		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9000/file/input").setMethod(HttpMethod.POST);
-		builder.addBodyPart(new StringPart("name", "value", "UTF-8")).addBodyPart(new FilePart("myfile", new File("resource/한글.prop"), "image/jpeg", "UTF-8"));
+		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9200/file/input").setMethod(HttpMethod.POST);
+		builder.addBodyPart(new StringPart("name", "value", "UTF-8"))
+			.addBodyPart(new FilePart("myfile", new File("resource/temp/anger2.png")));
 
 		NewClient client = NewClient.create();
 		Response response = client.prepareRequest(builder.build()).execute().get();
@@ -65,8 +81,10 @@ public class TestMultiPart extends TestCase {
 	}
 
 	public void testParse() throws Exception {
-		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9000/file/parse").setMethod(HttpMethod.POST);
-		builder.addBodyPart(new StringPart("name", "value", "UTF-8")).addBodyPart(new FilePart("myfile", new File("resource/ptest.prop"), "image/jpeg", "UTF-8"));
+		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9200/file/parse").setMethod(HttpMethod.POST);
+		builder.addBodyPart(new StringPart("name", "value", "UTF-8"))
+			.addBodyPart(new FilePart("myfile", new File("resource/temp/anger2.png")))
+			.addBodyPart(new FilePart("myfile", new File("resource/ptest.prop"), "plain/txt", "UTF-8"));
 
 		NewClient client = NewClient.create();
 		Response response = client.prepareRequest(builder.build()).execute().get();
@@ -75,7 +93,7 @@ public class TestMultiPart extends TestCase {
 
 	
 	public void testParseInfo() throws Exception {
-		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9000/file/pinfo").setMethod(HttpMethod.POST);
+		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9200/file/pinfo").setMethod(HttpMethod.POST);
 		builder.addBodyPart(new StringPart("name", "value", "UTF-8"))
 			.addBodyPart(new FilePart("myfile", new File("resource/favicon.ico"), "image/jpeg", "UTF-8"))
 			.addBodyPart(new FilePart("myfile", new File("resource/한글.prop"), "plain/txt", "UTF-8")) ;
@@ -87,14 +105,16 @@ public class TestMultiPart extends TestCase {
 
 	
 	public void testHandler() throws Exception {
-		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9000/file/handle").setMethod(HttpMethod.POST);
-		builder.addBodyPart(new StringPart("name", "value", "UTF-8"))
-			.addBodyPart(new FilePart("myfile", new File("resource/favicon.ico"), "image/jpeg", "UTF-8"))
-			.addBodyPart(new FilePart("myfile", new File("resource/한글.prop"), "plain/txt", "UTF-8")) ;
+		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9200/file/handle").setMethod(HttpMethod.POST);
+		builder
+//			.addBodyPart(new StringPart("name", "value", "UTF-8"))
+			.addBodyPart(new FilePart("myfile", new File("resource/temp/anger2.png")))
+//			.addBodyPart(new FilePart("myfile", new File("resource/한글.prop"), "plain/txt", "UTF-8"))
+			;
 
 		NewClient client = NewClient.create();
 		Response response = client.prepareRequest(builder.build()).execute().get();
-		Debug.line(response.getTextBody(), response.getStatus());
+		assertEquals(200, response.getStatus().getCode());
 	}
 	
 	
@@ -108,7 +128,7 @@ class UploadFileService {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public String uploadFile(@MultipartForm FileUploadForm uform, @Context HttpRequest req) throws IOException {
 
-		Debug.line(uform.name, IOUtil.toString(uform.input));
+		Debug.line(uform.name, IOUtil.toByteArrayWithClose(uform.input).length);
 
 		return "";
 	}
@@ -123,7 +143,7 @@ class UploadFileService {
 			System.out.println(hname + ":" + headers.getRequestHeaders().getFirst(hname));
 		}
 		System.out.println();
-		System.out.print(IOUtil.toStringWithClose(input));
+		System.out.print(IOUtil.toByteArrayWithClose(input).length);
 		return "";
 	}
 
@@ -137,7 +157,7 @@ class UploadFileService {
 			Debug.line(entry.getKey(), entry.getValue());
 			for (InputPart part : entry.getValue()) {
 				InputStream inputStream = part.getBody(InputStream.class,null);
-				Debug.debug(part.getMediaType(), IOUtil.toStringWithClose(inputStream)) ;
+				Debug.debug(part.getMediaType(),  IOUtil.toByteArrayWithClose(inputStream).length) ;
 			}
 		}
 
@@ -168,7 +188,9 @@ class UploadFileService {
 		input.dataHandle(new FormDataHandler<Void>() {
 			@Override
 			public Void handle(InputBody ib) throws IOException {
-				Debug.line(ib.name(), ib.isFilePart(), ib.mediaType(), ib.charset(), ib.transferEncoding(), ib.filename(), ib.asStream());
+//				if (ib.mediaType().toString().startsWith("image/png")) Debug.line(IOUtil.toByteArrayWithClose(ib.asStream()).length);
+				
+				Debug.line(ib.name(), ib.isFilePart(), ib.mediaType(), ib.charset(), ib.transferEncoding(), ib.filename(), IOUtil.toByteArrayWithClose(ib.asStream()).length);
 				return null;
 			}
 		}) ;
@@ -184,8 +206,13 @@ class FileUploadForm implements Serializable {
 	}
 
 	@FormParam("myfile")
+	@PartType("image/png")
 	InputStream input;
 
 	@FormParam("name")
 	String name;
+	
+	public void setInput(InputStream input){
+		this.input = input ;
+	}
 }
