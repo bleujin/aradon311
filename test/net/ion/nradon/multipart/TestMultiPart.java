@@ -1,6 +1,7 @@
 package net.ion.nradon.multipart;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -189,7 +190,7 @@ class UploadFileService {
 			@Override
 			public Void handle(InputBody ib) throws IOException {
 //				if (ib.mediaType().toString().startsWith("image/png")) Debug.line(IOUtil.toByteArrayWithClose(ib.asStream()).length);
-				
+				IOUtil.copyNClose(ib.asStream(), new FileOutputStream(new File("./resource/temp/an3.png")));
 				Debug.line(ib.name(), ib.isFilePart(), ib.mediaType(), ib.charset(), ib.transferEncoding(), ib.filename(), IOUtil.toByteArrayWithClose(ib.asStream()).length);
 				return null;
 			}
