@@ -28,7 +28,6 @@ public class TestTinyWebServer {
 				try {
 					srv.notifyStop();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				srv.destroyAllServlets();

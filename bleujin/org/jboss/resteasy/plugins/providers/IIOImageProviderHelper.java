@@ -1,8 +1,13 @@
 package org.jboss.resteasy.plugins.providers;
 
-import org.jboss.resteasy.annotations.providers.img.ImageWriterParams;
-import org.jboss.resteasy.logging.Logger;
-import org.jboss.resteasy.util.FindAnnotation;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -17,14 +22,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Variant;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.annotation.Annotation;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+
+import org.jboss.resteasy.annotations.providers.img.ImageWriterParams;
+import org.jboss.resteasy.logging.Logger;
+import org.jboss.resteasy.util.FindAnnotation;
 
 /**
  * A IIOImageProviderHelper.
@@ -40,7 +41,6 @@ public final class IIOImageProviderHelper {
 	}
 
 	/**
-	 * FIXME Comment this
 	 * 
 	 * @param mediaType
 	 * @return
@@ -56,7 +56,6 @@ public final class IIOImageProviderHelper {
 	}
 
 	/**
-	 * FIXME Comment this
 	 * 
 	 * @param in
 	 * @param mediaType
@@ -71,7 +70,6 @@ public final class IIOImageProviderHelper {
 	}
 
 	/**
-	 * FIXME Comment this
 	 * 
 	 * @param mediaType
 	 * @return
@@ -95,7 +93,6 @@ public final class IIOImageProviderHelper {
 	}
 
 	/**
-	 * FIXME Comment this
 	 * 
 	 * @param annotations
 	 * @param mediaType

@@ -112,13 +112,11 @@ class DebugHandler implements HttpHandler {
 
 	@Override
 	public void onEvent(EventType event, Radon radon) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public int order() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

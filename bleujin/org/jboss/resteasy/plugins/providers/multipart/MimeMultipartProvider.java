@@ -1,8 +1,11 @@
 package org.jboss.resteasy.plugins.providers.multipart;
 
-import org.jboss.resteasy.plugins.providers.AbstractEntityProvider;
-import org.jboss.resteasy.spi.ReaderException;
-import org.jboss.resteasy.spi.WriterException;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 
 import javax.activation.DataSource;
 import javax.mail.MessagingException;
@@ -14,12 +17,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+
+import org.jboss.resteasy.plugins.providers.AbstractEntityProvider;
+import org.jboss.resteasy.spi.ReaderException;
+import org.jboss.resteasy.spi.WriterException;
 
 /**
  * A provider to handle multipart representations. This implementation will be
@@ -82,7 +83,6 @@ public class MimeMultipartProvider extends AbstractEntityProvider<MimeMultipart>
    }
 
    /**
-    * FIXME Comment this
     *
     * @param type
     * @param genericType
@@ -114,7 +114,6 @@ public class MimeMultipartProvider extends AbstractEntityProvider<MimeMultipart>
    }
 
    /**
-    * FIXME Comment this
     *
     * @param mimeMultipart
     * @param type

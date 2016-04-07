@@ -41,7 +41,6 @@ public class ExceptionAdapter extends RuntimeException {
 	}
 
 	/**
-	 * FIXME Comment this
 	 * 
 	 * @see @see java.lang.Throwable#printStackTrace()
 	 */
@@ -50,7 +49,6 @@ public class ExceptionAdapter extends RuntimeException {
 	}
 
 	/**
-	 * FIXME Comment this
 	 * 
 	 * @param s
 	 * @see @see java.lang.Throwable#printStackTrace(java.io.PrintStream)
@@ -63,7 +61,6 @@ public class ExceptionAdapter extends RuntimeException {
 	}
 
 	/**
-	 * FIXME Comment this
 	 * 
 	 * @param s
 	 * @see @see java.lang.Throwable#printStackTrace(java.io.PrintWriter)
