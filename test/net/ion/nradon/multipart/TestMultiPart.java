@@ -22,6 +22,7 @@ import net.ion.framework.util.Debug;
 import net.ion.framework.util.IOUtil;
 import net.ion.nradon.Radon;
 import net.ion.nradon.config.RadonConfiguration;
+import net.ion.radon.aclient.ClientConfig;
 import net.ion.radon.aclient.NewClient;
 import net.ion.radon.aclient.RequestBuilder;
 import net.ion.radon.aclient.Response;
@@ -95,13 +96,15 @@ public class TestMultiPart extends TestCase {
 	
 	public void testParseInfo() throws Exception {
 		RequestBuilder builder = new RequestBuilder().setUrl("http://localhost:9200/file/pinfo").setMethod(HttpMethod.POST);
-		builder.addBodyPart(new StringPart("name", "value", "UTF-8"))
-			.addBodyPart(new FilePart("myfile", new File("resource/favicon.ico"), "image/jpeg", "UTF-8"))
-			.addBodyPart(new FilePart("myfile", new File("resource/한글.prop"), "plain/txt", "UTF-8")) ;
+		builder
+			.addBodyPart(new StringPart("name", "한글", "UTF-8"))
+			.addBodyPart(new StringPart("age", "20", "UTF-8"))
+			.addBodyPart(new FilePart("myfile", new File("resource/한글.prop"), "application/octet-stream", "UTF-8")) 
+			.addBodyPart(new FilePart("myfile", new File("resource/favicon.ico"), "image/jpeg", "UTF-8")) ;
 
-		NewClient client = NewClient.create();
+		NewClient client = NewClient.create(ClientConfig.newBuilder().setRequestTimeoutInMs(1000000000).build());
 		Response response = client.prepareRequest(builder.build()).execute().get();
-		Debug.line(response.getTextBody(), response.getStatus());
+		assertEquals(200, response.getStatus().getCode());
 	}
 
 	
@@ -170,12 +173,19 @@ class UploadFileService {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public String parseEntityInfo(@Context HttpRequest request, MultipartFormDataInput  input) throws IOException {
 // http://www.mkyong.com/webservices/jax-rs/file-upload-example-in-resteasy/
+		
+		// Debug.debug("한글".getBytes("UTF-8")) ;  -19, -107, -100, -22, -72, -128
+		
 		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
 		for (Entry<String, List<InputPart>> entry : uploadForm.entrySet()) {
 			for (InputPart part : entry.getValue()) {
 				
 				InputBody ib = InputBody.create(entry.getKey(), part) ;
-				Debug.line(ib.name(), ib.isFilePart(), ib.mediaType(), ib.charset(), ib.transferEncoding(), ib.filename(), ib.asStream());
+				if(ib.isFilePart()){
+					Debug.debug(ib.name(), ib.mediaType(), ib.charset(), ib.transferEncoding(), ib.filename(), ib.asStream());
+				} else {
+					Debug.debug(ib.name(), ib.charset(), ib.asString());
+				}
 			}
 		}
 
@@ -191,7 +201,7 @@ class UploadFileService {
 			public Void handle(InputBody ib) throws IOException {
 //				if (ib.mediaType().toString().startsWith("image/png")) Debug.line(IOUtil.toByteArrayWithClose(ib.asStream()).length);
 				IOUtil.copyNClose(ib.asStream(), new FileOutputStream(new File("./resource/temp/an3.png")));
-				Debug.line(ib.name(), ib.isFilePart(), ib.mediaType(), ib.charset(), ib.transferEncoding(), ib.filename(), IOUtil.toByteArrayWithClose(ib.asStream()).length);
+				Debug.debug(ib.name(), ib.isFilePart(), ib.mediaType(), ib.charset(), ib.transferEncoding(), ib.filename(), IOUtil.toByteArrayWithClose(ib.asStream()).length);
 				return null;
 			}
 		}) ;

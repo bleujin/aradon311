@@ -127,7 +127,7 @@ public class MultipartInputImpl implements MultipartInput {
 	private static class BinaryMessage extends Message {
 		private BinaryMessage(InputStream is) throws IOException, MimeIOException {
 			try {
-				MimeStreamParser parser = new MimeStreamParser(null);
+				MimeStreamParser parser = new MimeStreamParser();
 				parser.setContentHandler(new BinaryOnlyMessageBuilder(this, DefaultStorageProvider.getInstance()));
 				parser.parse(is);
 			} catch (MimeException e) {

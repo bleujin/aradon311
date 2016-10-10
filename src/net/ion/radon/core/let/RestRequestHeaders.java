@@ -27,7 +27,7 @@ public class RestRequestHeaders implements HttpHeaders {
     }
 
     public List<String> getRequestHeader(String name) {
-        throw new UnsupportedOperationException();
+        return request.headers(name) ;
     }
 
     public MultivaluedMap<String, String> getRequestHeaders() {

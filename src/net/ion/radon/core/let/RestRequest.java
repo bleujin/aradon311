@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 
 import net.ion.framework.util.StringUtil;
@@ -15,7 +14,6 @@ import net.ion.nradon.HttpRequest;
 import org.jboss.resteasy.specimpl.PathSegmentImpl;
 import org.jboss.resteasy.specimpl.UriInfoImpl;
 import org.jboss.resteasy.spi.AsynchronousResponse;
-import org.jboss.resteasy.util.Encode;
 import org.jboss.resteasy.util.HttpRequestImpl;
 
 public class RestRequest extends HttpRequestImpl {
@@ -54,9 +52,9 @@ public class RestRequest extends HttpRequestImpl {
         throw new UnsupportedOperationException();
     }
     
-    public MultivaluedMap<String, String> getFormParameters() {
-    	return Encode.decode(super.getFormParameters()) ;
-    }
+//    public MultivaluedMap<String, String> getFormParameters() {
+//    	return Encode.decode(super.getFormParameters()) ;
+//    }
 
     public static RestRequest wrap(final HttpRequest request, String prefixURI) throws UnsupportedEncodingException {
         HttpHeaders headers = new RestRequestHeaders(request);

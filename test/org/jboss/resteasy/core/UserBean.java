@@ -8,7 +8,8 @@ public class UserBean {
 	@FormParam("pwd") private String pwd;
 	@FormParam("age") private int age;
 
-	public UserBean() {this.name = name ;
+	public UserBean() {
+		this.name = name ;
 	}
 
 	public String getName() {
