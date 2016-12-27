@@ -90,6 +90,12 @@ public class URIPattern extends URITemplate implements Matchable {
 	public boolean match(String uri) {
 		return this._pattern.matcher(uri).matches();
 	}
+	
+	
+	public int matchCount(String uri){
+		return match(uri) ? score() : -1 ;
+	}
+	
 
 	/**
 	 * Returns the regular expression pattern corresponding to this URI pattern.
