@@ -6,6 +6,9 @@ import java.net.URL;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
+import net.ion.framework.cloader.AfterReLoader;
+import net.ion.framework.cloader.DynamicClassLoader;
+import net.ion.framework.cloader.OuterClassLoader;
 import net.ion.framework.logging.LogBroker;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringUtil;
@@ -15,9 +18,6 @@ import net.ion.nradon.HttpRequest;
 import net.ion.nradon.HttpResponse;
 import net.ion.nradon.Radon;
 import net.ion.nradon.handler.event.ServerEvent.EventType;
-import net.ion.radon.cload.cloader.AfterReLoader;
-import net.ion.radon.cload.cloader.DynamicClassLoader;
-import net.ion.radon.cload.cloader.OuterClassLoader;
 import net.ion.radon.cload.monitor.AbstractListener;
 import net.ion.radon.cload.monitor.FileAlterationMonitor;
 import net.ion.radon.core.RadonInjectorFactory;
@@ -32,6 +32,7 @@ public class PathHandler implements HttpHandler {
 	private Dispatcher dispatcher;
 	private String prefixURI = "";
 	private ClassLoader cloader = PathHandler.class.getClassLoader();
+	private boolean disableCORS;
 
 	public PathHandler(Class... resources) {
 		init(new URL[0], resources);
@@ -40,6 +41,11 @@ public class PathHandler implements HttpHandler {
 
 	public static HttpHandler create(Class... resources) {
 		return new PathHandler(resources);
+	}
+	
+	public HttpHandler disableCors(){
+		this.disableCORS = true ;
+		return this ;
 	}
 	
 	// run with debug mode
@@ -94,7 +100,15 @@ public class PathHandler implements HttpHandler {
 			RestResponse res = new RestResponse(request, response, dispatcher, control);
 			dispatcher.invoke(req, res);
 			if (res.wasHandled()) {
-				if(response.status() >= 300){
+				if (! disableCORS) {
+					response.header("Access-Control-Allow-Origin", "*");
+					response.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+					response.header("calledby", request.header("Origin")) ;
+					response.header("Access-Control-Max-Age", "3600") ;
+					response.header("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization") ;
+				}
+
+				if(response.status() != 200){
 					response.end();
 				} else {
 					response.status(200).end();

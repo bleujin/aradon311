@@ -201,6 +201,7 @@ public class WebSocketClient implements WebSocket {
 
     private HttpRequest createNettyHttpRequest() {
         HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, getPath(uri));
+        
         request.setHeader(HttpHeaders.Names.HOST, remoteAddress.getHostName() + ':' + remoteAddress.getPort());
         request.setHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.UPGRADE);
         request.setHeader(HttpHeaders.Names.UPGRADE, "websocket");

@@ -125,6 +125,7 @@ public class NettyWebServer extends Radon {
 						pipeline.addLast("connectiontracker", connectionTrackingHandler);
 						pipeline.addLast("flashpolicydecoder", new FlashPolicyFileDecoder(getConfig().executor(), getConfig().exceptionHandler(), getConfig().ioExceptionHandler(), getConfig().getPort()));
 						pipeline.addLast("decoder", new HttpRequestDecoder(getConfig().maxInitialLineLength(), getConfig().maxHeaderSize(), getConfig().maxChunkSize()));
+
 						pipeline.addLast("aggregator", new HttpChunkAggregator(getConfig().maxContentLength()));
 						pipeline.addLast("chunker", new ChunkedWriteHandler());
 						pipeline.addLast("decompressor", new HttpContentDecompressor());

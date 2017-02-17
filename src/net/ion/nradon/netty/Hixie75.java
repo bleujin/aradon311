@@ -32,6 +32,7 @@ public class Hixie75 implements WebSocketVersion {
     public void prepareHandshakeResponse(NettyWebSocketConnection webSocketConnection) {
         webSocketConnection.setVersion("HIXIE-75");
         res.setStatus(new HttpResponseStatus(101, "Web Socket Protocol Handshake"));
+        
         res.addHeader(UPGRADE, WEBSOCKET);
         res.addHeader(CONNECTION, HttpHeaders.Values.UPGRADE);
         String origin = req.getHeader(ORIGIN);

@@ -10,6 +10,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
 import junit.framework.TestCase;
+import net.ion.framework.cloader.DynamicClassLoader;
+import net.ion.framework.cloader.OuterClassLoader;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.InfinityThread;
 import net.ion.nradon.Radon;

@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.concurrent.Executors;
 
 import junit.framework.TestCase;
+import net.ion.framework.cloader.PathClassLoader;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.InfinityThread;
 import net.ion.radon.cload.monitor.AbstractListener;
@@ -29,7 +30,7 @@ public class TestReloadClassLoad extends TestCase {
 				while (true) {
 					try {
 						Thread.sleep(1000);
-						Object o = classloader.loadClass("net.ion.radon.cload.cloader.Main").newInstance();
+						Object o = classloader.loadClass("net.ion.framework.cloader.Main").newInstance();
 						((Runnable) o).run();
 					} catch (Throwable e) {
 						e.printStackTrace();

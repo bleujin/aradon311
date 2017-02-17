@@ -1,11 +1,11 @@
 package org.jboss.resteasy.plugins.server.resourcefactory;
 
 import junit.framework.TestCase;
+import net.ion.framework.cloader.PathClassLoader;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.InfinityThread;
 import net.ion.nradon.Radon;
 import net.ion.nradon.config.RadonConfiguration;
-import net.ion.radon.cload.cloader.PathClassLoader;
 import net.ion.radon.core.let.PathHandler;
 
 import org.apache.commons.beanutils.MethodUtils;

@@ -2,7 +2,7 @@ package org.jboss.resteasy.plugins.server.resourcefactory;
 
 import java.lang.reflect.Constructor;
 
-import net.ion.radon.cload.cloader.PathClassLoader;
+import net.ion.framework.cloader.PathClassLoader;
 
 import org.jboss.resteasy.spi.ConstructorInjector;
 import org.jboss.resteasy.spi.HttpRequest;

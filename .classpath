@@ -4,17 +4,25 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="sample"/>
 	<classpathentry kind="src" path="bleujin"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk6_45"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_45"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/ref/aclient_0.5.jar"/>
 	<classpathentry kind="lib" path="lib/ref/iframework_2.3.jar"/>
 	<classpathentry kind="lib" path="lib/reflib/apache_extend_fat.jar"/>
 	<classpathentry kind="lib" path="lib/reflib/jsr311_fat.jar"/>
-	<classpathentry kind="lib" path="lib/reflib/netty-3.2.7.Final.jar"/>
 	<classpathentry kind="lib" path="lib/option/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/option/mockito-all-1.9.0-rc1.jar"/>
 	<classpathentry kind="lib" path="lib/option/slf4j-api-1.7.6.jar"/>
 	<classpathentry kind="lib" path="lib/reflib/crawl_jci.jar"/>
 	<classpathentry kind="lib" path="lib/option/guava-jdk5-13.0.jar"/>
+	<classpathentry kind="lib" path="lib/option/groovy-2.4.8.jar"/>
+	<classpathentry kind="lib" path="lib/option/groovy-jsr223-2.4.8.jar"/>
+	<classpathentry kind="lib" path="lib/option/groovy-xml-2.4.8.jar"/>
+	<classpathentry kind="lib" path="lib/option/scala-compiler.jar"/>
+	<classpathentry kind="lib" path="lib/option/scala-library.jar"/>
+	<classpathentry kind="lib" path="lib/option/scala-reflect.jar"/>
+	<classpathentry kind="lib" path="lib/option/scalap-2.11.8.jar"/>
+	<classpathentry kind="lib" path="lib/option/config-1.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/reflib/netty-3.6.5.Final.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
