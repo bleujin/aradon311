@@ -15,13 +15,6 @@
 	<classpathentry kind="lib" path="lib/option/slf4j-api-1.7.6.jar"/>
 	<classpathentry kind="lib" path="lib/reflib/crawl_jci.jar"/>
 	<classpathentry kind="lib" path="lib/option/guava-jdk5-13.0.jar"/>
-	<classpathentry kind="lib" path="lib/option/groovy-2.4.8.jar"/>
-	<classpathentry kind="lib" path="lib/option/groovy-jsr223-2.4.8.jar"/>
-	<classpathentry kind="lib" path="lib/option/groovy-xml-2.4.8.jar"/>
-	<classpathentry kind="lib" path="lib/option/scala-compiler.jar"/>
-	<classpathentry kind="lib" path="lib/option/scala-library.jar"/>
-	<classpathentry kind="lib" path="lib/option/scala-reflect.jar"/>
-	<classpathentry kind="lib" path="lib/option/scalap-2.11.8.jar"/>
 	<classpathentry kind="lib" path="lib/option/config-1.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/reflib/netty-3.6.5.Final.jar"/>
 	<classpathentry kind="output" path="bin"/>

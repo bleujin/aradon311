@@ -30,7 +30,7 @@
 	<property name="manifest.main.class" value="net.ion.radon.ServerRunner" />
 	<property name="manifest.classpath" value="lib/ant.fat lib/jci_fat.jar lib/iframework_2.3.jar lib/apache_extend_fat.jar lib/servlet-api.jar" />
 	<property name="version.number" value="0" />
-	<property name="build.number" value="9" />
+	<property name="build.number" value="10" />
 	
 
 	<target name="publish">
